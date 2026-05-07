@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+
+    <div class="card p-4 shadow" style="width: 350px;">
+        <h4 class="text-center mb-3">Đăng nhập</h4>
+
+        <!--  Lỗi login -->
+        <div th:if="${param.error}" class="alert alert-danger py-2">
+            Sai tài khoản hoặc mật khẩu
+        </div>
+
+        <form th:action="@{/do-login}" method="post" autocomplete="off">
+
+            <label class="form-label">Tên đăng nhập</label>
+            <input name="username" class="form-control mb-3" placeholder="Username" required>
+            <label class="form-label">Mật khẩu</label>
+            <input name="password" type="password" class="form-control mb-3" placeholder="Mật khẩu" required>
+
+            <button class="btn btn-primary w-100 mb-2">Đăng nhập</button>
+        </form>
+
+        <!--  Đăng ký -->
+        <div class="text-center">
+            <span>Chưa có tài khoản?</span>
+            <a href="/register">Đăng ký</a>
+        </div>
+
+        <!-- Trang chủ -->
+        <div class="text-center mt-2">
+            <a href="/" class="text-decoration-none">Về trang chủ</a>
+        </div>
+
+    </div>
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('input[name="username"]').value = '';
+                document.querySelector('input[name="password"]').value = '';
+            }, 10);
+        });
+    </script>
+</body>
+</html>

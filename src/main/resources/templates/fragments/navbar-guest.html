@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<nav class="navbar navbar-expand-lg bg-white"
+     th:fragment="navbarGuest">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold text-primary"
+           href="/">
+            Quiz App
+        </a>
+
+        <div class="d-flex gap-2">
+
+            <a href="/login"
+               class="btn btn-outline-primary">
+                Đăng nhập
+            </a>
+
+            <a href="/register"
+               class="btn btn-primary">
+                Đăng ký
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+</body>
+</html>
