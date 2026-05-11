@@ -24,6 +24,9 @@ public class User extends BaseEntity {
     @Field(name = "password")
     private String password;
 
+    @Field(name = "phone")
+    private String phone;
+
     @Field(name = "first_name")
     private String firstName;
 

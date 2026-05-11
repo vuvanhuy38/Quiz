@@ -11,9 +11,5 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends MongoRepository<Category, String> {
 
-    boolean existsByNameAndParentId(String name, String parentId);
-
-    Page<Category> findByParentIdIsNull(Pageable pageable);
-
-    List<Category> findByParentId(String parentId);
+    boolean existsByNameIgnoreCase(String name);
 }

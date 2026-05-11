@@ -47,7 +47,7 @@ public class CategoryResources {
     @GetMapping("/getlist")
     public ResponseEntity<ResponsePage<List<CategoryResponse>>> getAll(
             Pageable pageable) {
-        return ResponseEntity.ok(
+        return ResponseEntity.status(HttpStatus.OK).body(
                 categoryService.getAll(pageable)
         );
     }
@@ -56,7 +56,7 @@ public class CategoryResources {
     public ResponseEntity<Response<Object>> delete(
             @PathVariable String id) {
         categoryService.delete(id);
-        return ResponseEntity.ok(
+        return ResponseEntity.status(HttpStatus.OK).body(
                 Response.builder()
                         .message("Xóa category thành công")
                         .build()

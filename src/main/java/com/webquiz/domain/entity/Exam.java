@@ -17,6 +17,9 @@ public class Exam extends BaseEntity {
     @Field(name = "description")
     private String description;
 
+    @Field(name = "category_id")
+    private String categoryId;
+
     @Field(name = "time_limit")
     private Integer timeLimit;
 

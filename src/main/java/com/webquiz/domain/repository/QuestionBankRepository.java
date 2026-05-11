@@ -6,8 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuestionBankRepository extends MongoRepository<QuestionBank, String> {
-
-    void deleteByCategoryId(String categoryId);
-
-    void deleteByParentCategoryId(String parentCategoryId);
 }

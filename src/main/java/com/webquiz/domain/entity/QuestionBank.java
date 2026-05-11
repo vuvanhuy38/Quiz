@@ -17,9 +17,6 @@ public class QuestionBank extends BaseEntity {
     @Field(name = "content")
     private String content;
 
-    @Field(name = "parent_category_id")
-    private String parentCategoryId;
-
     @Field(name = "category_id")
     private String categoryId;
 

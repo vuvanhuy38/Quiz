@@ -2,13 +2,19 @@ package com.webquiz.web.controller.resources;
 
 import com.webquiz.domain.service.QuestionBankService;
 import com.webquiz.web.dto.common.Response;
+import com.webquiz.web.dto.common.ResponsePage;
 import com.webquiz.web.dto.request.questionBank.CreateQuestionRequest;
 import com.webquiz.web.dto.request.questionBank.UpdateQuestionRequest;
+import com.webquiz.web.dto.response.questionBank.QuestionBankDetailResponse;
+import com.webquiz.web.dto.response.questionBank.QuestionBankListResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/question-bank")
@@ -35,6 +41,30 @@ public class QuestionBankResources {
         return ResponseEntity.ok(
                 Response.<Void>builder()
                         .message("Cập nhập câu ho thành công")
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response<Void>> deleteQuestion(@PathVariable String id) {
+        questionBankService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<Void>builder()
+                        .message("Xóa câu hỏi thành công")
+                        .build()
+        );
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<ResponsePage<List<QuestionBankListResponse>>> getList(Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(questionBankService.getList(pageable));
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<Response<QuestionBankDetailResponse>> getDetail(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<QuestionBankDetailResponse>builder()
+                        .data(questionBankService.getDetail(id))
                         .build()
         );
     }

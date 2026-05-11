@@ -5,10 +5,16 @@ import com.webquiz.domain.entity.OptionBank;
 import com.webquiz.domain.entity.QuestionBank;
 import com.webquiz.domain.repository.QuestionBankRepository;
 import com.webquiz.domain.service.QuestionBankService;
+import com.webquiz.web.dto.common.ResponsePage;
 import com.webquiz.web.dto.request.questionBank.CreateQuestionRequest;
 import com.webquiz.web.dto.request.questionBank.OptionBankDto;
 import com.webquiz.web.dto.request.questionBank.UpdateQuestionRequest;
+import com.webquiz.web.dto.response.questionBank.OptionBankResponse;
+import com.webquiz.web.dto.response.questionBank.QuestionBankDetailResponse;
+import com.webquiz.web.dto.response.questionBank.QuestionBankListResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +65,55 @@ public class QuestionBankServiceImpl implements QuestionBankService {
         questionBankRepository.save(question);
     }
 
+    @Override
+    public void delete(String id) {
+        QuestionBank question = questionBankRepository.findById(id)
+                                                      .orElseThrow(() -> new RuntimeException("Không tìm thấy câu hỏi với id: " + id));
+
+        questionBankRepository.delete(question);
+    }
+
+    @Override
+    public ResponsePage<List<QuestionBankListResponse>> getList(Pageable pageable) {
+        Page<QuestionBank> page = questionBankRepository.findAll(pageable);
+
+        List<QuestionBankListResponse> content =
+                page.getContent().stream().map(
+                        q -> QuestionBankListResponse.builder()
+                                           .id(q.getId())
+                                           .content(q.getContent())
+                                           .categoryId(q.getCategoryId())
+                                           .type(q.getType())
+                                           .level(q.getLevel())
+                                           .build())
+                        .toList();
+
+        return ResponsePage.<List<QuestionBankListResponse>>builder()
+                           .data(content)
+                           .totalElement(page.getTotalElements())
+                           .totalPage(page.getTotalPages())
+                           .pageSize(page.getSize())
+                           .pageIndex(page.getNumber())
+                           .build();
+    }
+
+    @Override
+    public QuestionBankDetailResponse getDetail(String id) {
+        QuestionBank question = questionBankRepository.findById(id)
+                                                      .orElseThrow(() -> new RuntimeException("Không tìm thấy câu hỏi với id: " + id));
+
+        return QuestionBankDetailResponse.builder()
+                                         .id(question.getId())
+                                         .content(question.getContent())
+                                         .categoryId(question.getCategoryId())
+                                         .type(question.getType())
+                                         .options(mapToOptionDtos(question.getOptions()))
+                                         .correctAnswer(question.getCorrectAnswer())
+                                         .correctAnswerKeys(question.getCorrectAnswerKeys())
+                                         .level(question.getLevel())
+                                         .build();
+    }
+
     private List<OptionBank> mapOptions(List<OptionBankDto> options) {
         if (options == null) return null;
 
@@ -67,6 +122,18 @@ public class QuestionBankServiceImpl implements QuestionBankService {
                                           .key(o.getKey())
                                           .text(o.getText())
                                           .build())
+                      .toList();
+    }
+
+
+    private List<OptionBankResponse> mapToOptionDtos(List<OptionBank> options) {
+        if (options == null) return null;
+
+        return options.stream()
+                      .map(o -> OptionBankResponse.builder()
+                                             .key(o.getKey())
+                                             .text(o.getText())
+                                             .build())
                       .toList();
     }
 }
