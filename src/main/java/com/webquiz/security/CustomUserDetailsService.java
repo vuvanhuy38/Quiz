@@ -1,4 +1,4 @@
-package com.webquiz.domain.service.impl;
+package com.webquiz.security;
 
 import com.webquiz.domain.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,24 +17,16 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userrepository;
+    private final UserRepository userrepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userrepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("Không tìm thấy người dùng");
+            throw new UsernameNotFoundException("Không tìm thấy người dùng: " + username);
         }
 
-        List<GrantedAuthority> authorities = List.of(
-                new SimpleGrantedAuthority("ROLE_" + user.getRole())
-        );
-
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), authorities);
-
-        return userDetails;
+        return new CustomUserDetails(user);
     }
 }

@@ -13,4 +13,6 @@ public interface ExamAttemptService {
     StartAttemptResponse startAttempt(String examId);
     List<ExamQuestionResponse> getQuestions(String attemptId);
     SubmitExamResponse submitExam(String attemptId, SubmitExamRequest request);
+
+    void delete(String attemptId);
 }

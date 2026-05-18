@@ -22,7 +22,7 @@ public class CategoryResources {
 
     private final CategoryService categoryService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Response<Void>> create(@Valid @RequestBody CreateCategoryRequest request) {
         categoryService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -32,7 +32,7 @@ public class CategoryResources {
         );
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Response<Void>> update(
             @PathVariable String id,
             @Valid @RequestBody UpdateCategoryRequest request) {
@@ -52,7 +52,7 @@ public class CategoryResources {
         );
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Response<Object>> delete(
             @PathVariable String id) {
         categoryService.delete(id);

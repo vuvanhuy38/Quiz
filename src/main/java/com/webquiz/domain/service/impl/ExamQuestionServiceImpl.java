@@ -98,6 +98,16 @@ public class ExamQuestionServiceImpl implements ExamQuestionService {
         }).toList();
     }
 
+    @Override
+    @Transactional
+    public void delete(String questionId) {
+        ExamQuestion question = examQuestionRepository.findById(questionId)
+                                                      .orElseThrow(() -> new RuntimeException("Question không tồn tại: " + questionId));
+
+        examQuestionRepository.delete(question);
+        syncTotalQuestions(question.getExamId());
+    }
+
 
     private void syncTotalQuestions(String examId) {
         examRepository.findById(examId).ifPresent(exam -> {

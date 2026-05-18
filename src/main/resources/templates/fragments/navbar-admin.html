@@ -1,51 +1,29 @@
 <!DOCTYPE html>
-<html lang="vi"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark"
-     th:fragment="navbarAdmin">
+    <div th:fragment="navbarAdmin" class="sidebar">
+        <!-- Logo -->
+        <div class="sidebar-header">
+            <a href="/admin" class="logo">Admin Panel</a>
+        </div>
 
-  <div class="container">
-
-    <a class="navbar-brand fw-bold"
-       href="/admin">
-      Admin Panel
-    </a>
-
-    <div class="d-flex align-items-center gap-3 text-white">
-
-      <!-- Menu admin -->
-      <a href="/admin/users" class="text-white text-decoration-none">
-        Quản lý người dùng
-      </a>
-
-      <a href="/admin/exams" class="text-white text-decoration-none">
-        Quản lý đề thi
-      </a>
-
-      <a href="/admin/categories" class="text-white text-decoration-none">
-        Danh mục
-      </a>
-
-      <span>
-        Xin chào,
-        <b sec:authentication="name"></b>
-      </span>
-
-      <form th:action="@{/logout}" method="post">
-        <button class="btn btn-danger btn-sm">
-          Đăng xuất
-        </button>
-      </form>
-
+        <!-- Menu -->
+        <ul class="sidebar-menu">
+            <li>
+                <a href="/admin/dashboard">Dashboard</a>
+            </li>
+            <li>
+                <a href="/admin/users">Quản lý người dùng</a>
+            </li>
+            <li>
+                <a href="/admin/exams">Quản lý đề thi</a>
+            </li>
+            <li>
+                <a href="/admin/categories">Danh mục</a>
+            </li>
+        </ul>
     </div>
-
-  </div>
-
-</nav>
 
 </body>
 </html>

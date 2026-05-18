@@ -2,9 +2,10 @@ package com.webquiz.domain.repository;
 
 import com.webquiz.contact.enums.StatusExamType;
 import com.webquiz.domain.entity.Exam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +20,11 @@ public interface ExamRepository extends MongoRepository<Exam, String> {
 
     @Query("{'status': ?0, 'title': { $regex: ?1, $options: 'i'}}")
     List<Exam> findByStatusAndTitleContainingIgnoreCase(StatusExamType status, String title);
+
+    @Query("{ $and: [ " +
+           "  { $or: [ { $expr: { $eq: [?0, ''] } }, { title: { $regex: ?0, $options: 'i' } } ] }, " +
+           "  { $or: [ { $expr: { $eq: [?1, null] } }, { categoryId: ?1 } ] }, " +
+           "  { $or: [ { $expr: { $eq: [?2, null] } }, { status: ?2 } ] } " +
+           "] }")
+    Page<Exam> findAllWithFilters(String keyword, String categoryId, StatusExamType status, Pageable pageable);
 }

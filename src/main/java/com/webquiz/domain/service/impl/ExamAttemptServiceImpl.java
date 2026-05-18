@@ -8,6 +8,7 @@ import com.webquiz.domain.repository.ExamAttemptRepository;
 import com.webquiz.domain.repository.ExamQuestionRepository;
 import com.webquiz.domain.repository.ExamRepository;
 import com.webquiz.domain.service.ExamAttemptService;
+import com.webquiz.security.CustomUserDetails;
 import com.webquiz.web.dto.request.attempt.SubmitAnswerItemDto;
 import com.webquiz.web.dto.request.attempt.SubmitExamRequest;
 import com.webquiz.web.dto.response.attempt.ExamQuestionResponse;
@@ -38,8 +39,8 @@ public class ExamAttemptServiceImpl implements ExamAttemptService {
 
         List<ExamQuestion> questions = questionRepository.findByExamId(examId);
 
-        UserDetails user = SessionUtil.getCurrentUser();
-        String username = user.getUsername();
+        CustomUserDetails user = SessionUtil.getCurrentUser();
+        String username = user.getId();
 
         ExamAttempt attempt = ExamAttempt.builder()
                                          .examId(examId)
@@ -93,24 +94,18 @@ public class ExamAttemptServiceImpl implements ExamAttemptService {
             ExamQuestion question = questionRepository.findById(item.getExamQuestionId())
                                                       .orElseThrow(() -> new RuntimeException("Question not found"));
 
-            boolean isCorrect = false;
+            boolean isCorrect = switch (question.getType()) {
+                case SINGLE_CHOICE, TRUE_FALSE ->
+                        question.getCorrectAnswer() != null
+                        && question.getCorrectAnswer()
+                                   .equalsIgnoreCase(item.getSelectedAnswer());
 
-            // SINGLE_CHOICE
-            if (question.getType() == QuestionType.SINGLE_CHOICE) {
-
-                isCorrect = question.getCorrectAnswer() != null
-                            && question.getCorrectAnswer()
-                                       .equalsIgnoreCase(item.getSelectedAnswer());
-            }
-
-            // MULTIPLE_CHOICE
-            if (question.getType() == QuestionType.MULTIPLE_CHOICE) {
-
-                isCorrect = item.getSelectedKeys() != null
-                            && question.getCorrectAnswerKeys() != null
-                            && new HashSet<>(item.getSelectedKeys())
-                                    .equals(new HashSet<>(question.getCorrectAnswerKeys()));
-            }
+                case MULTIPLE_CHOICE ->
+                        item.getSelectedKeys() != null
+                        && question.getCorrectAnswerKeys() != null
+                        && new HashSet<>(item.getSelectedKeys())
+                                .equals(new HashSet<>(question.getCorrectAnswerKeys()));
+            };
 
             int points = isCorrect ? 1 : 0;
 
@@ -154,6 +149,20 @@ public class ExamAttemptServiceImpl implements ExamAttemptService {
                                  .status(attempt.getStatus().name())
                                  .build();
     }
+
+    @Override
+    @Transactional
+    public void delete(String attemptId) {
+        ExamAttempt attempt = attemptRepository.findById(attemptId)
+                                               .orElseThrow(() -> new RuntimeException("Attempt not found with id: " + attemptId));
+
+        if (attempt.getStatus() == AttemptStatusType.IN_PROGRESS) {
+            throw new RuntimeException("Không thể xóa bài thi đang trong quá trình làm");
+        }
+
+        attemptRepository.delete(attempt);
+    }
+
 
     private List<OptionResponse> convertOptions(List<OptionBank> options) {
 

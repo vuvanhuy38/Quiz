@@ -20,21 +20,21 @@ public class ExamAttemptResources {
 
     private final ExamAttemptService examAttemptService;
 
-    @PostMapping("/start/{examId}")
-    public ResponseEntity<Response<StartAttemptResponse>> start(@PathVariable String examId) {
-        StartAttemptResponse response = examAttemptService.startAttempt(examId);
+    @PostMapping("/start/{id}")
+    public ResponseEntity<Response<StartAttemptResponse>> start(@PathVariable String id) {
+        StartAttemptResponse response = examAttemptService.startAttempt(id);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 Response.<StartAttemptResponse>builder()
                         .data(response)
                         .build());
     }
 
-    @GetMapping("/{attemptId}/questions")
+    @GetMapping("/{id}/questions")
     public ResponseEntity<Response<List<ExamQuestionResponse>>> getQuestions(
-            @PathVariable String attemptId) {
+            @PathVariable String id) {
 
         List<ExamQuestionResponse> response =
-                examAttemptService.getQuestions(attemptId);
+                examAttemptService.getQuestions(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 Response.<List<ExamQuestionResponse>>builder()
@@ -43,12 +43,12 @@ public class ExamAttemptResources {
         );
     }
 
-    @PostMapping("/{attemptId}/submit")
+    @PostMapping("/{id}/submit")
     public ResponseEntity<Response<SubmitExamResponse>> submitExam(
-            @PathVariable String attemptId,
+            @PathVariable String id,
             @RequestBody SubmitExamRequest request) {
 
-        SubmitExamResponse response = examAttemptService.submitExam(attemptId, request);
+        SubmitExamResponse response = examAttemptService.submitExam(id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 Response.<SubmitExamResponse>builder()
@@ -57,4 +57,13 @@ public class ExamAttemptResources {
         );
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response<Void>> deleteAttempt(@PathVariable String id) {
+        examAttemptService.delete(id);
+        return ResponseEntity.ok(
+                Response.<Void>builder()
+                        .message("Xóa lịch sử làm bài thành công")
+                        .build()
+        );
+    }
 }

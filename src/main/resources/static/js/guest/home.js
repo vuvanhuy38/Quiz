@@ -83,7 +83,7 @@ function renderExams(containerId, exams) {
                         <div class="info-text mb-3">
                             Ngày tạo:<strong>${formatDate(exam.createdAt)}</strong>
                         </div>
-                        <a href="/exams/${exam.id}" class="btn btn-primary w-100">Chi tiết</a>
+                       <a href="/detail/${exam.id}" class="btn btn-primary w-100">Chi tiết</a>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,77 @@
+.exam-content {
+    padding: 24px;
+}
+
+.dashboard-card,
+.filter-card,
+.table-card {
+    border: none;
+    border-radius: 16px;
+}
+
+.top-action h3 {
+    font-size: 28px;
+}
+
+.create-btn {
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-box input {
+    padding-left: 40px;
+    height: 46px;
+    border-radius: 12px;
+}
+
+.form-select {
+    height: 46px;
+    border-radius: 12px;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 16px;
+    white-space: nowrap;
+}
+
+.table td {
+    padding: 18px 16px;
+    vertical-align: middle;
+}
+
+.exam-title h6 {
+    font-weight: 600;
+}
+
+.badge {
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.action-buttons button {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+}
+
+.table tbody tr:hover {
+    background-color: #fafafa;
+    transition: 0.2s;
+}

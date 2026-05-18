@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết đề thi</title>
+
+  <link rel="stylesheet" href="/css/exam-detail.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+  <!-- Guest -->
+  <div sec:authorize="isAnonymous()"
+       th:replace="~{fragments/navbar-guest :: navbarGuest}">
+  </div>
+
+  <!-- User -->
+  <div sec:authorize="isAuthenticated()"
+       th:replace="~{fragments/navbar-user :: navbarUser}">
+  </div>
+
+  <div class="container py-5">
+
+    <div id="exam-detail"></div>
+
+  </div>
+
+<script src="/js/guest/exam-detail.js"></script>
+
+</body>
+</html>

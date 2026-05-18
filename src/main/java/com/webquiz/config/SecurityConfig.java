@@ -20,17 +20,19 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
                                      "/swagger-resources/**", "/webjars/**").permitAll()
-                    .requestMatchers("/login", "/register","/do-login", "/", "/logout").permitAll()
+                    .requestMatchers("/login", "/api/auth/register", "/register", "/do-login", "/",
+                                     "/logout").permitAll()
                     .requestMatchers("/api/exams/home", "/js/**", "/css/**", "/home",
-                                     "/api/exams/search").permitAll()
-//                    .requestMatchers("").hasRole("USER")
-//                    .requestMatchers("").hasRole("ADMIN")
+                                     "/api/exams/search", "/api/exams/detail/*", "/detail/*").permitAll()
+                    .requestMatchers("/api/attempts/**").hasRole("USER")
+                    .requestMatchers("/api/category/**", "/api/question-bank/**", "/api/exams/**",
+                                     "/api/exam-question/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
             .formLogin(form -> form
                     .loginPage("/login")
                     .loginProcessingUrl("/do-login")
-                    .defaultSuccessUrl("/", true)
+                    .defaultSuccessUrl("/handle-login-success", true)
             )
             .logout(logout -> logout
                     .logoutUrl("/logout")

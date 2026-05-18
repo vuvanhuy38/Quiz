@@ -19,13 +19,13 @@ public class ExamQuestionResources {
 
     private final ExamQuestionService examQuestionService;
 
-    @PostMapping("/create/{examId}")
-    public ResponseEntity<Response<Void>> createExam(@PathVariable String examId,
+    @PostMapping("/create/{id}")
+    public ResponseEntity<Response<Void>> createExam(@PathVariable String id,
                                                      @Valid @RequestBody List<ExamQuestionRequest> requests) {
-        examQuestionService.upsertExamQuestion(examId, requests);
+        examQuestionService.upsertExamQuestion(id, requests);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 Response.<Void>builder()
-                        .message("Tạo đề thi thành công")
+                        .message("Tạo câu hỏi thành công")
                         .build()
         );
     }
@@ -41,6 +41,16 @@ public class ExamQuestionResources {
                 Response.<List<ExamQuestionRequest>>builder()
                         .data(data)
                         .message("Preview thành công")
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response<Void>> deleteQuestion(@PathVariable String id) {
+        examQuestionService.delete(id);
+        return ResponseEntity.ok(
+                Response.<Void>builder()
+                        .message("Xóa câu hỏi thành công")
                         .build()
         );
     }

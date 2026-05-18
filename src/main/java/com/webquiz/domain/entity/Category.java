@@ -15,4 +15,7 @@ public class Category extends BaseEntity{
 
     @Field(name = "description")
     private String description;
+
+    @Field(name = "parent_id")
+    private String parentId;
 }

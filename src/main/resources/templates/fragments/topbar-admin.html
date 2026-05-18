@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+
+  <div th:fragment="topbarAdmin(title)">
+
+    <div class="topbar">
+
+      <div>
+        <h4 class="mb-0 fw-bold"
+                th:text="${title}">
+          Dashboard
+        </h4>
+      </div>
+
+      <div class="topbar-right">
+
+            <span>
+                <b sec:authentication="principal.fullName"></b>
+            </span>
+
+        <form th:action="@{/logout}" method="post">
+
+          <button class="btn btn-danger btn-sm">
+            Đăng xuất
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

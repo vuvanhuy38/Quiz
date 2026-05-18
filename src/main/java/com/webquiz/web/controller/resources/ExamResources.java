@@ -1,15 +1,19 @@
 package com.webquiz.web.controller.resources;
 
+import com.webquiz.contact.enums.StatusExamType;
 import com.webquiz.domain.service.ExamService;
 import com.webquiz.web.dto.common.Response;
+import com.webquiz.web.dto.common.ResponsePage;
 import com.webquiz.web.dto.request.exam.CreateExamRequest;
 import com.webquiz.web.dto.request.exam.UpdateExamRequest;
+import com.webquiz.web.dto.response.exam.ExamDetailResponse;
 import com.webquiz.web.dto.response.exam.ExamItemResponse;
 import com.webquiz.web.dto.response.exam.ExamResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +64,37 @@ public class ExamResources {
                 Response.<List<ExamItemResponse>>builder()
                         .data(examService.search(title))
                         .build()
+        );
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response<Void>> deleteExam(@PathVariable String id) {
+        examService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<Void>builder()
+                        .message("Xóa đề thi thành công")
+                        .build()
+        );
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<Response<ExamDetailResponse>> getExamDetail(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<ExamDetailResponse>builder()
+                        .message("Lấy chi tiết đề thi thành công")
+                        .data(examService.getExamDetail(id))
+                        .build()
+        );
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<ResponsePage<List<ExamItemResponse>>> getAllExams(
+            @RequestParam(required = false,defaultValue = "") String keyword,
+            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) StatusExamType status,
+            Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                examService.getAllExams(pageable, keyword, categoryId, status)
         );
     }
 }

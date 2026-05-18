@@ -13,4 +13,6 @@ public interface ExamQuestionRepository extends MongoRepository<ExamQuestion, St
     long countByExamId(String examId);
 
     List<ExamQuestion> findByExamId(String examId);
+
+    void deleteAllByExamId(String examId);
 }
