@@ -9,4 +9,9 @@ public class Exam {
     public String dashboard() {
         return "admin/exam-management";
     }
+
+    @GetMapping({"/admin/exams/create"})
+    public String examCreate() {
+        return "admin/create-exam";
+    }
 }

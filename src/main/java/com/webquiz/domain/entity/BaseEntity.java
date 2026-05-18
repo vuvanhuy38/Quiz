@@ -13,7 +13,7 @@ public class BaseEntity {
     private String id;
 
     @Field(name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Field(name = "updated_at")
     private LocalDateTime updatedAt;

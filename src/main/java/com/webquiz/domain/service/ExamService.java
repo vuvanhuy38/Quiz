@@ -20,7 +20,7 @@ public interface ExamService {
     void delete(String id);
     ExamDetailResponse getExamDetail(String id);
     ResponsePage<List<ExamItemResponse>> getAllExams(Pageable pageable,
-                                                     String keyword,
+                                                     String title,
                                                      String categoryId,
                                                      StatusExamType status);
 }

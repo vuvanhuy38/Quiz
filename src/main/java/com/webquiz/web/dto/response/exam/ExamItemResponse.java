@@ -1,5 +1,6 @@
 package com.webquiz.web.dto.response.exam;
 
+import com.webquiz.contact.enums.StatusExamType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,6 +21,8 @@ public class ExamItemResponse {
     private Integer timeLimit;
 
     private Long attemptCount;
+
+    private StatusExamType status;
 
     private LocalDateTime createdAt;
 }

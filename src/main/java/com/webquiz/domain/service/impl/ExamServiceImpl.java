@@ -135,10 +135,11 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ResponsePage<List<ExamItemResponse>> getAllExams(Pageable pageable, String keyword,
+    public ResponsePage<List<ExamItemResponse>> getAllExams(Pageable pageable, String title,
                                                             String categoryId, StatusExamType status) {
 
-        Page<Exam> examPage = examRepository.findAllWithFilters(keyword, categoryId, status, pageable);
+        String normalizedtitle = Normalizer.normalize(title, Normalizer.Form.NFC);
+        Page<Exam> examPage = examRepository.findAllWithFilters(normalizedtitle, categoryId, status, pageable);
 
         List<ExamItemResponse> items = mapToExamItems(examPage.getContent());
 
@@ -160,6 +161,7 @@ public class ExamServiceImpl implements ExamService {
                                                  .timeLimit(exam.getTimeLimit())
                                                  .totalQuestions(exam.getTotalQuestions())
                                                  .attemptCount(exam.getAttemptCount())
+                                                 .status(exam.getStatus())
                                                  .createdAt(exam.getCreatedAt())
                                                  .build())
                     .toList();

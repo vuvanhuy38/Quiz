@@ -86,7 +86,6 @@ public class ExamQuestionServiceImpl implements ExamQuestionService {
         return banks.stream().map(bank -> {
             ExamQuestionRequest req = new ExamQuestionRequest();
 
-            req.setId(bank.getId());
             req.setContent(bank.getContent());
             req.setType(bank.getType());
             req.setOptions(mapOptionsToDto(bank.getOptions()));

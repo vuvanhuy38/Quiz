@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/css/admin/layout.css">
     <link rel="stylesheet" href="/css/admin/exam-management.css">
 
+
 </head>
 
 <body>
@@ -35,18 +36,12 @@
                 <div class="top-action d-flex justify-content-between align-items-center mb-4">
 
                     <div>
-
-                        <h3 class="fw-bold mb-1">
-                            Danh sách đề thi
-                        </h3>
-
-                        <p class="text-muted mb-0">
-                            Quản lý toàn bộ đề thi trong hệ thống
-                        </p>
-
+                        <h3 class="fw-bold mb-1">Danh sách đề thi</h3>
+                        <p class="text-muted mb-0">Quản lý toàn bộ đề thi trong hệ thống</p>
                     </div>
 
-                    <button class="btn btn-primary create-btn">
+                    <button class="btn btn-primary create-btn"
+                            onclick="window.location.href='/admin/exams/create'">
                         <i class="bi bi-plus-circle"></i>
                         Tạo đề thi
                     </button>
@@ -55,67 +50,47 @@
 
                 <!-- Search + Filter -->
                 <div class="card filter-card shadow-sm mb-4">
-
                     <div class="card-body">
-
                         <div class="row g-3">
 
                             <div class="col-md-4">
-
                                 <div class="search-box">
-
                                     <i class="bi bi-search"></i>
-
-                                    <input type="text"
-                                            class="form-control"
+                                    <input type="text" id="searchInput" class="form-control"
                                             placeholder="Tìm kiếm đề thi...">
-
                                 </div>
-
                             </div>
 
                             <div class="col-md-3">
-
-                                <select class="form-select">
-                                    <option>Tất cả danh mục</option>
-                                    <option>Java</option>
-                                    <option>Spring Boot</option>
-                                    <option>JavaScript</option>
+                                <select class="form-select" id="categoryFilter">
+                                    <option value="">Tất cả danh mục</option>
+                                    <option value="Java">Java</option>
+                                    <option value="Spring Boot">Spring Boot</option>
+                                    <option value="JavaScript">JavaScript</option>
                                 </select>
-
                             </div>
 
                             <div class="col-md-2">
-
-                                <select class="form-select">
-                                    <option>Mới nhất</option>
-                                    <option>Cũ nhất</option>
+                                <select class="form-select" id="sortFilter">
+                                    <option value="createdAt,desc">Mới nhất</option>
+                                    <option value="createdAt,asc">Cũ nhất</option>
                                 </select>
-
                             </div>
 
                             <div class="col-md-2">
-
                                 <select class="form-select" id="statusFilter">
-
                                     <option value="">Tất cả trạng thái</option>
                                     <option value="ACTIVE">Hoạt động</option>
                                     <option value="INACTIVE">Ẩn</option>
-
                                 </select>
-
                             </div>
 
-                            <div class="col-md-2">
-                                <button class="btn btn-dark w-100">
-                                    Lọc
-                                </button>
+                            <div class="col-md-1">
+                                <button class="btn btn-dark w-100" id="filterBtn">Lọc</button>
                             </div>
 
                         </div>
-
                     </div>
-
                 </div>
 
                 <!-- Table -->
@@ -126,10 +101,8 @@
                         <table class="table align-middle mb-0">
 
                             <thead>
-
                             <tr>
-
-                                <th>#</th>
+                                <th>STT</th>
                                 <th>Tên đề thi</th>
                                 <th>Danh mục</th>
                                 <th>Số câu hỏi</th>
@@ -137,144 +110,34 @@
                                 <th>Trạng thái</th>
                                 <th>Ngày tạo</th>
                                 <th class="text-center">Hành động</th>
-
                             </tr>
-
                             </thead>
 
-                            <tbody>
-
-                            <tr>
-
-                                <td>1</td>
-
-                                <td>
-
-                                    <div class="exam-title">
-
-                                        <h6 class="mb-1">
-                                            Đề thi Java Core
-                                        </h6>
-
-                                        <small class="text-muted">
-                                            Kiểm tra kiến thức Java cơ bản
-                                        </small>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Java
-                                </td>
-
-                                <td>
-                                    30 câu
-                                </td>
-
-                                <td>
-                                    45 phút
-                                </td>
-
-                                <td>
-                                <span class="badge bg-success">
-                                    Hoạt động
-                                </span>
-                                </td>
-
-                                <td>
-                                    18/05/2026
-                                </td>
-
-                                <td>
-
-                                    <div class="action-buttons d-flex justify-content-center gap-2">
-
-                                        <button class="btn btn-sm btn-info text-white">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </button>
-
-                                        <button class="btn btn-sm btn-warning text-white">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </button>
-
-                                        <button class="btn btn-sm btn-danger">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </button>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-                            <tr>
-
-                                <td>2</td>
-
-                                <td>
-
-                                    <div class="exam-title">
-
-                                        <h6 class="mb-1">
-                                            Spring Boot REST API
-                                        </h6>
-
-                                        <small class="text-muted">
-                                            Đề thi backend nâng cao
-                                        </small>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Spring Boot
-                                </td>
-
-                                <td>
-                                    40 câu
-                                </td>
-
-                                <td>
-                                    60 phút
-                                </td>
-
-                                <td>
-                                <span class="badge bg-secondary">
-                                    Ẩn
-                                </span>
-                                </td>
-
-                                <td>
-                                    15/05/2026
-                                </td>
-
-                                <td>
-
-                                    <div class="action-buttons d-flex justify-content-center gap-2">
-
-                                        <button class="btn btn-sm btn-info text-white">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </button>
-
-                                        <button class="btn btn-sm btn-warning text-white">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </button>
-
-                                        <button class="btn btn-sm btn-danger">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                            <tbody id="examTableBody">
+                            <!-- JS render -->
                             </tbody>
                         </table>
                     </div>
+
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+
+                        <div id="tableInfo" class="text-muted small">
+                            <!-- ví dụ: 1 - 10 / 100 -->
+                        </div>
+
+                        <ul class="pagination custom-pagination mb-0" id="pagination"></ul>
+
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
+
+
+    <script src="/js/admin/exam-management.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

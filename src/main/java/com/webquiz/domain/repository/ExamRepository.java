@@ -26,5 +26,5 @@ public interface ExamRepository extends MongoRepository<Exam, String> {
            "  { $or: [ { $expr: { $eq: [?1, null] } }, { categoryId: ?1 } ] }, " +
            "  { $or: [ { $expr: { $eq: [?2, null] } }, { status: ?2 } ] } " +
            "] }")
-    Page<Exam> findAllWithFilters(String keyword, String categoryId, StatusExamType status, Pageable pageable);
+    Page<Exam> findAllWithFilters(String title, String categoryId, StatusExamType status, Pageable pageable);
 }
