@@ -1,5 +1,6 @@
 package com.webquiz.domain.service;
 
+import com.webquiz.domain.entity.Category;
 import com.webquiz.web.dto.common.ResponsePage;
 import com.webquiz.web.dto.request.category.CreateCategoryRequest;
 import com.webquiz.web.dto.request.category.UpdateCategoryRequest;
@@ -14,4 +15,6 @@ public interface CategoryService {
     void update(String id, UpdateCategoryRequest request);
     ResponsePage<List<CategoryResponse>> getAll(Pageable pageable);
     void delete(String id);
+    List<CategoryResponse> getParentCategories();
+    List<CategoryResponse> getChildCategories(String parentId);
 }

@@ -2,9 +2,11 @@ package com.webquiz.domain.service.impl;
 
 import com.webquiz.contact.SessionUtil;
 import com.webquiz.contact.enums.StatusExamType;
+import com.webquiz.domain.entity.Category;
 import com.webquiz.domain.entity.Exam;
 import com.webquiz.domain.entity.ExamQuestion;
 import com.webquiz.domain.entity.OptionBank;
+import com.webquiz.domain.repository.CategoryRepository;
 import com.webquiz.domain.repository.ExamQuestionRepository;
 import com.webquiz.domain.repository.ExamRepository;
 import com.webquiz.domain.service.ExamService;
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Normalizer;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,22 +31,25 @@ public class ExamServiceImpl implements ExamService {
 
     private final ExamRepository examRepository;
     private final ExamQuestionRepository examQuestionRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     @Transactional
-    public void create(CreateExamRequest examRequest) {
+    public String create(CreateExamRequest examRequest) {
 
         String createdBy = SessionUtil.getCurrentUser().getId();
 
         Exam exam = Exam.builder()
                         .title(examRequest.getTitle())
+                        .categoryId(examRequest.getCategoryId())
                         .description(examRequest.getDescription())
                         .timeLimit(examRequest.getTimeLimit())
                         .status(examRequest.getStatus())
                         .createdBy(createdBy)
                         .build();
 
-        examRepository.save(exam);
+        Exam saved = examRepository.save(exam);
+        return saved.getId();
     }
 
     @Override
@@ -107,6 +114,16 @@ public class ExamServiceImpl implements ExamService {
         Exam exam = examRepository.findById(id)
                                   .orElseThrow(() ->  new RuntimeException("ko tìm thấy đề thi"));
 
+        Category category = null;
+
+        if (exam.getCategoryId() != null) {
+
+            category = categoryRepository
+                    .findById(exam.getCategoryId())
+                    .orElse(null);
+        }
+
+
         List<ExamQuestion> questions =
                 examQuestionRepository.findByExamId(exam.getId());
 
@@ -127,9 +144,11 @@ public class ExamServiceImpl implements ExamService {
                                  .title(exam.getTitle())
                                  .description(exam.getDescription())
                                  .categoryId(exam.getCategoryId())
+                                 .parentCategoryId(category != null ? category.getParentId() : null)
                                  .timeLimit(exam.getTimeLimit())
                                  .totalQuestions(exam.getTotalQuestions())
                                  .attemptCount(exam.getAttemptCount())
+                                 .status(exam.getStatus())
                                  .questions(questionResponses)
                                  .build();
     }
@@ -153,10 +172,21 @@ public class ExamServiceImpl implements ExamService {
     }
 
     private List<ExamItemResponse> mapToExamItems(List<Exam> exams) {
+
+        List<String> categoryIds = exams.stream().map(Exam::getCategoryId).distinct().toList();
+
+        Map<String, String> categoryMap = categoryRepository.findAllById(categoryIds).stream().
+                                                            collect(Collectors.toMap(
+                                                            Category::getId,
+                                                            Category::getName));
+
         return exams.stream()
                     .map(exam -> ExamItemResponse.builder()
                                                  .id(exam.getId())
                                                  .title(exam.getTitle())
+                                                 .categoryName(
+                                                         categoryMap.get(exam.getCategoryId())
+                                                 )
                                                  .description(exam.getDescription())
                                                  .timeLimit(exam.getTimeLimit())
                                                  .totalQuestions(exam.getTotalQuestions())

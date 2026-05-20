@@ -1,125 +1,372 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin đề thi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        .nav-tabs .nav-link {
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: #666;
-            font-weight: 500;
-            padding: 12px 20px;
-        }
-        .nav-tabs .nav-link.active {
-            color: #0d6efd;
-            border-bottom: 3px solid #0d6efd;
-            background: none;
-        }
-        .info-banner {
-            background-color: #e7f3ff;
-            border: 1px solid #b3d4ff;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 0.95rem;
-        }
-        .form-label {
-            font-weight: 500;
-            color: #333;
-        }
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 10px 14px;
-            border: 1px solid #ced4da;
-        }
-        .required::after {
-            content: " *";
-            color: #dc3545;
-        }
-        .btn {
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 500;
-        }
-        .bottom-buttons {
-            margin-top: 40px;
-        }
-    </style>
+
+    <title>Tạo đề thi</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+
+    <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/css/admin/layout.css">
+    <link rel="stylesheet" href="/css/admin/create-exam.css">
+
 </head>
+
 <body>
-    <div class="container-fluid py-4">
-        <!-- Tabs -->
-        <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-                <a class="nav-link active" href="#"><i class="bi bi-info-circle"></i> Thông tin đề</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Câu hỏi <span class="badge bg-primary">3</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-bank"></i> Ngân hàng đề</a>
-            </li>
-        </ul>
 
-        <!-- Info Banner -->
-        <div class="info-banner mb-4">
-            <i class="bi bi-info-circle-fill text-primary"></i>
-            Đây là form tạo/cập nhật đề thi. Gọi <strong>POST /exam</strong> (tạo mới) hoặc <strong>PUT /exam/:id</strong> (cập nhật).
-        </div>
-
-        <div class="row">
-            <div class="col-lg-8">
-
-                <!-- Tiêu đề đề thi -->
-                <div class="mb-4">
-                    <label class="form-label required">Tiêu đề đề thi</label>
-                    <input type="text" class="form-control" value="Kiểm tra cuối kỳ môn Lập trình Web" placeholder="Nhập tiêu đề đề thi">
-                </div>
-
-                <!-- Mô tả -->
-                <div class="mb-4">
-                    <label class="form-label">Mô tả</label>
-                    <textarea class="form-control" rows="4" placeholder="Mô tả đề thi...">Bài kiểm tra đánh giá kiến thức HTML, CSS, JavaScript và React.</textarea>
-                </div>
-
-                <div class="row">
-                    <!-- Thời gian -->
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label required">Thời gian (phút)</label>
-                        <input type="number" class="form-control" value="60">
-                    </div>
-
-                    <!-- Trạng thái -->
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label">Trạng thái</label>
-                        <select class="form-select">
-                            <option selected>Draft — chưa công khai</option>
-                            <option>Published — công khai</option>
-                            <option>Archived</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Bottom Buttons -->
-                <div class="bottom-buttons d-flex gap-3">
-                    <button class="btn btn-outline-secondary">
-                        <i class="bi bi-question-circle"></i> Hỏi về status
-                    </button>
-                    <button class="btn btn-primary">
-                        <i class="bi bi-save"></i> Lưu đề thi
-                    </button>
-                </div>
-            </div>
-        </div>
+    <div sec:authorize="hasRole('ADMIN')"
+            th:replace="~{fragments/navbar-admin :: navbarAdmin}">
     </div>
 
+    <div class="main-content">
+
+        <div th:replace="~{fragments/topbar-admin :: topbarAdmin('Quản lý đề thi')}"></div>
+
+        <div class="exam-create-wrapper">
+
+            <div class="container-fluid">
+
+                <div class="page-card">
+
+                    <!-- TABS -->
+                    <div class="custom-tabs">
+
+                        <div class="custom-tab active"
+                                id="tabInfo">
+
+                            <i class="bi bi-file-earmark-text"></i>
+
+                            Thông tin đề
+
+                        </div>
+
+                        <div class="custom-tab disabled"
+                                id="tabQuestion">
+
+                            <i class="bi bi-list-task"></i>
+
+                            Câu hỏi
+
+                            <span class="badge bg-secondary"
+                                    id="questionCount">
+
+                                0
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- INFO -->
+                    <div id="infoSection">
+
+                        <input type="hidden"
+                                id="examId">
+
+                        <div class="row g-4">
+
+                            <div class="col-12">
+
+                                <label>Tiêu đề *</label>
+
+                                <input type="text"
+                                        class="form-control"
+                                        id="title">
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <label>Danh mục cha</label>
+
+                                <select class="form-select"
+                                        id="parentCategory">
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <label>Danh mục con</label>
+
+                                <select class="form-select"
+                                        id="childCategory"
+                                        disabled>
+                                </select>
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <label>Mô tả</label>
+
+                                <textarea class="form-control"
+                                        id="description"
+                                        rows="4">
+                                </textarea>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <label>Thời gian</label>
+
+                                <input type="number"
+                                        class="form-control"
+                                        id="timeLimit">
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <label>Trạng thái</label>
+
+                                <select class="form-select"
+                                        id="status">
+
+                                    <option value="ACTIVE">
+                                        ACTIVE
+                                    </option>
+
+                                    <option value="INACTIVE">
+                                        INACTIVE
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mt-3">
+
+                            <button class="btn btn-dark"
+                                    id="saveExamBtn">
+
+                                Lưu đề thi
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- QUESTION -->
+                    <div id="questionSection"
+                            style="display:none">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <h4 class="mb-0">
+                                Danh sách câu hỏi
+                            </h4>
+
+                            <div class="d-flex gap-2 flex-wrap">
+
+                                <button class="btn btn-dark"
+                                        id="btnAddManual">
+
+                                    <i class="bi bi-plus-circle"></i>
+
+                                    Thêm thủ công
+
+                                </button>
+
+                                <button class="btn btn-outline-dark"
+                                        id="btnImportBank">
+
+                                    <i class="bi bi-database-add"></i>
+
+                                    Import Question Bank
+
+                                </button>
+
+                                <button class="btn btn-success"
+                                        id="btnSaveQuestions">
+
+                                    <i class="bi bi-check-circle"></i>
+
+                                    Lưu câu hỏi
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div id="questionList">
+
+                            <div class="alert alert-secondary">
+                                Chưa có câu hỏi
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal fade"
+            id="addQuestionModal"
+            tabindex="-1">
+
+        <div class="modal-dialog modal-xl">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Thêm câu hỏi
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <!-- CONTENT -->
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Nội dung câu hỏi
+                        </label>
+
+                        <textarea class="form-control"
+                                id="questionContent"
+                                rows="3">
+                        </textarea>
+
+                    </div>
+
+                    <!-- TYPE + LEVEL -->
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Loại câu hỏi
+                            </label>
+
+                            <select class="form-select"
+                                    id="questionType">
+
+                                <option value="SINGLE_CHOICE">
+                                    SINGLE_CHOICE
+                                </option>
+
+                                <option value="MULTIPLE_CHOICE">
+                                    MULTIPLE_CHOICE
+                                </option>
+
+                                <option value="TRUE_FALSE">
+                                    TRUE_FALSE
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Độ khó
+                            </label>
+
+                            <select class="form-select"
+                                    id="questionLevel">
+
+                                <option value="EASY">
+                                    EASY
+                                </option>
+
+                                <option value="MEDIUM">
+                                    MEDIUM
+                                </option>
+
+                                <option value="HARD">
+                                    HARD
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <!-- OPTIONS -->
+                    <div id="optionsContainer">
+
+                    </div>
+
+                    <!-- ADD OPTION -->
+                    <div class="mt-3">
+
+                        <button class="btn btn-outline-dark"
+                                type="button"
+                                id="btnAddOption">
+
+                            <i class="bi bi-plus-circle"></i>
+
+                            Thêm đáp án
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+
+                        Đóng
+
+                    </button>
+
+                    <button class="btn btn-dark"
+                            id="btnSaveManualQuestion">
+
+                        Lưu câu hỏi
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/js/admin/create-exam.js"></script>
+
 </body>
+
 </html>

@@ -1,6 +1,7 @@
 package com.webquiz.web.dto.response.exam;
 
 
+import com.webquiz.contact.enums.StatusExamType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,11 +19,15 @@ public class ExamDetailResponse {
 
     private String categoryId;
 
+    private String parentCategoryId;
+
     private Integer timeLimit;
 
     private Integer totalQuestions;
 
     private Long attemptCount;
+
+    private StatusExamType status;
 
     private String createdBy;
 

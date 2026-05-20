@@ -11,6 +11,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.addEventListener("click", function (e) {
+
+    const btn = e.target.closest(".edit-exam-btn");
+    if (!btn) return;
+
+    const examId = btn.getAttribute("data-id");
+
+    goToEditExam(examId);
+});
+
 async function loadExams() {
 
     try {
@@ -87,7 +97,8 @@ function renderTable(exams) {
                             <i class="bi bi-eye-fill"></i>
                         </button>
 
-                        <button class="btn btn-sm btn-warning text-white">
+                        <button class="btn btn-sm btn-warning text-white edit-exam-btn"
+                                data-id="${exam.id}">
                             <i class="bi bi-pencil-fill"></i>
                         </button>
 
@@ -219,4 +230,8 @@ function buildQuery(params) {
     }
 
     return query.toString();
+}
+
+function goToEditExam(examId) {
+    window.location.href = `/admin/exams/update/${examId}`;
 }

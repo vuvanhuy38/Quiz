@@ -28,10 +28,11 @@ public class ExamResources {
     private final ExamService examService;
 
     @PostMapping("/create")
-    public ResponseEntity<Response<Void>> createExam(@Valid @RequestBody CreateExamRequest request) {
-        examService.create(request);
+    public ResponseEntity<Response<String>> createExam(@Valid @RequestBody CreateExamRequest request) {
+        String id = examService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                Response.<Void>builder()
+                Response.<String>builder()
+                        .data(id)
                         .message("Tạo đề thi thành công")
                         .build()
         );

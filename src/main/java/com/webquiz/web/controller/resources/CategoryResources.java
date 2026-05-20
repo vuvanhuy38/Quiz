@@ -62,4 +62,27 @@ public class CategoryResources {
                         .build()
         );
     }
+
+    @GetMapping("/parents")
+    public ResponseEntity<Response<List<CategoryResponse>>> getParentCategories() {
+        List<CategoryResponse> data = categoryService.getParentCategories();
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<List<CategoryResponse>>builder()
+                        .message("Lấy danh sách category cha thành công")
+                        .data(data)
+                        .build()
+        );
+    }
+
+    @GetMapping("/children/{parentId}")
+    public ResponseEntity<Response<List<CategoryResponse>>> getChildCategories(@PathVariable String parentId) {
+        List<CategoryResponse> data = categoryService.getChildCategories(parentId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<List<CategoryResponse>>builder()
+                        .message("Lấy danh sách category con thành công")
+                        .data(data)
+                        .build()
+        );
+    }
 }

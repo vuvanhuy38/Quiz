@@ -14,6 +14,8 @@ public class ExamItemResponse {
 
     private String title;
 
+    private String categoryName;
+
     private String description;
 
     private Integer totalQuestions;

@@ -131,4 +131,39 @@ public class CategoryServiceImpl implements CategoryService {
         // xóa category hiện tại
         categoryRepository.delete(category);
     }
+
+    @Override
+    public List<CategoryResponse> getParentCategories() {
+
+        List<Category> categories =
+                categoryRepository.findByParentIdIsNull();
+
+        return categories.stream()
+                         .map(this::mapToResponse)
+                         .toList();
+
+    }
+
+    @Override
+    public List<CategoryResponse> getChildCategories(String parentId) {
+
+        List<Category> categories =
+                categoryRepository.findByParentId(parentId);
+
+        return categories.stream()
+                         .map(this::mapToResponse)
+                         .toList();
+
+    }
+
+    private CategoryResponse mapToResponse(Category category) {
+
+        return CategoryResponse.builder()
+                               .id(category.getId())
+                               .name(category.getName())
+                               .description(category.getDescription())
+                               .parentId(category.getParentId())
+                               .build();
+
+    }
 }
