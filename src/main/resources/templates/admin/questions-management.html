@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>Quản lý ngân hàng câu hỏi</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+  <link rel="stylesheet" href="/css/admin/layout.css">
+  <link rel="stylesheet" href="/css/admin/questions-management.css">
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div sec:authorize="hasRole('ADMIN')"
+     th:replace="~{fragments/navbar-admin :: navbarAdmin}">
+</div>
+
+<div class="main-content">
+
+  <!-- TOPBAR -->
+  <div th:replace="~{fragments/topbar-admin :: topbarAdmin('Quản lý ngân hàng câu hỏi')}">
+  </div>
+
+  <div class="question-content">
+
+    <div class="container-fluid">
+
+      <!-- HEADER ACTION (GIỐNG EXAM) -->
+      <div class="top-action d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+          <h3 class="fw-bold mb-1">Ngân hàng câu hỏi</h3>
+          <p class="text-muted mb-0">Quản lý toàn bộ câu hỏi trong hệ thống</p>
+        </div>
+
+        <button class="btn btn-primary create-btn"
+                onclick="window.location.href='/admin/questions/create'">
+          <i class="bi bi-plus-circle"></i>
+          Tạo câu hỏi
+        </button>
+
+      </div>
+
+      <!-- FILTER (GIỐNG EXAM STYLE) -->
+      <div class="card filter-card shadow-sm mb-4">
+
+        <div class="card-body">
+
+          <div class="row g-3">
+
+            <!-- SEARCH -->
+            <div class="col-md-4">
+              <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text"
+                       id="content"
+                       class="form-control"
+                       placeholder="Tìm nội dung câu hỏi...">
+              </div>
+            </div>
+
+            <!-- TYPE -->
+            <div class="col-md-3">
+              <select class="form-select" id="type">
+                <option value="">Tất cả loại</option>
+                <option value="SINGLE_CHOICE">Single Choice</option>
+                <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+                <option value="TRUE_FALSE">True/False</option>
+              </select>
+            </div>
+
+            <!-- LEVEL -->
+            <div class="col-md-3">
+              <select class="form-select" id="level">
+                <option value="">Tất cả mức độ</option>
+                <option value="EASY">Easy</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HARD">Hard</option>
+              </select>
+            </div>
+
+            <!-- FILTER BUTTON -->
+            <div class="col-md-2">
+              <button class="btn btn-dark w-100" id="filterBtn">
+                Lọc
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="card table-card shadow-sm">
+
+        <div class="table-responsive">
+
+          <table class="table align-middle mb-0">
+
+            <thead>
+            <tr>
+              <th>STT</th>
+              <th>Nội dung câu hỏi</th>
+              <th>Danh mục</th>
+              <th>Loại</th>
+              <th>Mức độ</th>
+              <th class="text-center">Hành động</th>
+            </tr>
+            </thead>
+
+            <tbody id="questionTable">
+            <!-- JS render -->
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <!-- PAGINATION (GIỐNG EXAM) -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+
+          <div id="tableInfo" class="text-muted small">
+            <!-- page info -->
+          </div>
+
+          <ul class="pagination custom-pagination mb-0" id="pagination"></ul>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="/js/admin/questions-management.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

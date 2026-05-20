@@ -1,0 +1,119 @@
+.question-content {
+    padding: 24px;
+}
+
+/* CARD STYLE (giống exam) */
+.dashboard-card,
+.filter-card,
+.table-card {
+    border: none;
+    border-radius: 16px;
+}
+
+/* HEADER TITLE */
+.top-action h3 {
+    font-size: 28px;
+}
+
+/* CREATE BUTTON */
+.create-btn {
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* SEARCH BOX */
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-box input {
+    padding-left: 40px;
+    height: 46px;
+    border-radius: 12px;
+}
+
+/* INPUT + SELECT */
+.form-select {
+    height: 46px;
+    border-radius: 12px;
+}
+
+/* TABLE HEADER */
+.table th {
+    background-color: #f8f9fa;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 16px;
+    white-space: nowrap;
+}
+
+/* TABLE CELL */
+.table td {
+    padding: 18px 16px;
+    vertical-align: middle;
+}
+
+/* QUESTION TITLE */
+.question-content {
+    font-weight: 600;
+}
+
+/* BADGE STYLE */
+.badge {
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* ACTION BUTTONS */
+.action-buttons button {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+}
+
+/* HOVER ROW */
+.table tbody tr:hover {
+    background-color: #fafafa;
+    transition: 0.2s;
+}
+
+/* PAGINATION */
+.custom-pagination {
+    gap: 6px;
+}
+
+.custom-pagination .page-item .page-link {
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    color: #333;
+    padding: 6px 12px;
+    transition: all 0.2s ease;
+}
+
+.custom-pagination .page-item .page-link:hover {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.custom-pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+    font-weight: 600;
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+    pointer-events: none;
+}

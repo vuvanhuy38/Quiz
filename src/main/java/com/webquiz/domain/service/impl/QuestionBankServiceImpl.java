@@ -1,8 +1,10 @@
 package com.webquiz.domain.service.impl;
 
 import com.webquiz.contact.validate.QuestionValidator;
+import com.webquiz.domain.entity.Category;
 import com.webquiz.domain.entity.OptionBank;
 import com.webquiz.domain.entity.QuestionBank;
+import com.webquiz.domain.repository.CategoryRepository;
 import com.webquiz.domain.repository.QuestionBankRepository;
 import com.webquiz.domain.service.QuestionBankService;
 import com.webquiz.web.dto.common.ResponsePage;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.Normalizer;
 import java.util.List;
 
 @Service
@@ -25,6 +28,7 @@ import java.util.List;
 public class QuestionBankServiceImpl implements QuestionBankService {
 
     private final QuestionBankRepository questionBankRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     @Transactional
@@ -74,22 +78,28 @@ public class QuestionBankServiceImpl implements QuestionBankService {
     }
 
     @Override
-    public ResponsePage<List<QuestionBankListResponse>> getList(Pageable pageable) {
-        Page<QuestionBank> page = questionBankRepository.findAll(pageable);
+    public ResponsePage<List<QuestionBankListResponse>> getList(Pageable pageable, String type, String level, String content) {
+        String normalizedcontent = Normalizer.normalize(content, Normalizer.Form.NFC);
+        Page<QuestionBank> page = questionBankRepository.findAllWithFilters( type, level, normalizedcontent, pageable);
 
-        List<QuestionBankListResponse> content =
-                page.getContent().stream().map(
-                        q -> QuestionBankListResponse.builder()
-                                           .id(q.getId())
-                                           .content(q.getContent())
-                                           .categoryId(q.getCategoryId())
-                                           .type(q.getType())
-                                           .level(q.getLevel())
-                                           .build())
-                        .toList();
+
+        List<QuestionBankListResponse> contents =
+                page.getContent().stream().map(q -> {
+                    String categoryName = categoryRepository.findById(q.getCategoryId())
+                            .map(Category::getName)
+                            .orElse("Không có danh mục");
+
+                    return QuestionBankListResponse.builder()
+                            .id(q.getId())
+                            .content(q.getContent())
+                            .categoryName(categoryName)
+                            .type(q.getType())
+                            .level(q.getLevel())
+                            .build();
+                }).toList();
 
         return ResponsePage.<List<QuestionBankListResponse>>builder()
-                           .data(content)
+                           .data(contents)
                            .totalElement(page.getTotalElements())
                            .totalPage(page.getTotalPages())
                            .pageSize(page.getSize())
@@ -102,10 +112,14 @@ public class QuestionBankServiceImpl implements QuestionBankService {
         QuestionBank question = questionBankRepository.findById(id)
                                                       .orElseThrow(() -> new RuntimeException("Không tìm thấy câu hỏi với id: " + id));
 
+        String categoryName = categoryRepository.findById(question.getCategoryId())
+                .map(Category::getName)
+                .orElse("Không có danh mục");
+
         return QuestionBankDetailResponse.builder()
                                          .id(question.getId())
                                          .content(question.getContent())
-                                         .categoryId(question.getCategoryId())
+                                         .categoryName(categoryName)
                                          .type(question.getType())
                                          .options(mapToOptionDtos(question.getOptions()))
                                          .correctAnswer(question.getCorrectAnswer())

@@ -14,6 +14,9 @@ public interface QuestionBankService {
     void create(CreateQuestionRequest request);
     void update(String id, UpdateQuestionRequest request);
     void delete(String id);
-    ResponsePage<List<QuestionBankListResponse>> getList(Pageable pageable);
+    ResponsePage<List<QuestionBankListResponse>> getList(Pageable pageable,
+                                                         String type,
+                                                         String level,
+                                                         String content);
     QuestionBankDetailResponse getDetail(String id);
 }

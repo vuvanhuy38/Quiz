@@ -12,7 +12,7 @@ import java.util.List;
 public class QuestionBankDetailResponse {
     private String id;
     private String content;
-    private String categoryId;
+    private String categoryName;
     private QuestionType type;
     private List<OptionBankResponse> options;
     private String correctAnswer;

@@ -56,8 +56,11 @@ public class QuestionBankResources {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponsePage<List<QuestionBankListResponse>>> getList(Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(questionBankService.getList(pageable));
+    public ResponseEntity<ResponsePage<List<QuestionBankListResponse>>> getList( @RequestParam(required = false) String type,
+                                                                                 @RequestParam(required = false) String level,
+                                                                                 @RequestParam(required = false,defaultValue = "") String content,
+                                                                                 Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(questionBankService.getList(pageable, type, level, content));
     }
 
     @GetMapping("/detail/{id}")

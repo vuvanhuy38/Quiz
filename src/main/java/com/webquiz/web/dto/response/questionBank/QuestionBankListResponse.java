@@ -10,7 +10,7 @@ import lombok.Data;
 public class QuestionBankListResponse {
     private String id;
     private String content;
-    private String categoryId;
+    private String categoryName;
     private QuestionType type;
     private LevelType level;
 }
