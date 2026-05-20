@@ -112,14 +112,17 @@ public class QuestionBankServiceImpl implements QuestionBankService {
         QuestionBank question = questionBankRepository.findById(id)
                                                       .orElseThrow(() -> new RuntimeException("Không tìm thấy câu hỏi với id: " + id));
 
-        String categoryName = categoryRepository.findById(question.getCategoryId())
-                .map(Category::getName)
-                .orElse("Không có danh mục");
+        Category category = null;
+        if (question.getCategoryId() != null) {
+            category = categoryRepository.findById(question.getCategoryId()).orElse(null);
+        }
 
         return QuestionBankDetailResponse.builder()
                                          .id(question.getId())
                                          .content(question.getContent())
-                                         .categoryName(categoryName)
+                                         .categoryId(question.getCategoryId())
+                                         .parentCategoryId(category != null ? category.getParentId() : null)
+                                         .categoryName(category.getName())
                                          .type(question.getType())
                                          .options(mapToOptionDtos(question.getOptions()))
                                          .correctAnswer(question.getCorrectAnswer())

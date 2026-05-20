@@ -7,21 +7,31 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class Exam {
     @GetMapping({"/admin/exams"})
     public String examManagement() {
-        return "admin/exam-management";
+        return "admin/exam/exam-management";
     }
 
     @GetMapping({"/admin/exams/create"})
     public String examCreate() {
-        return "admin/create-exam";
+        return "admin/exam/create-exam";
     }
 
     @GetMapping({"/admin/exams/update/{id}"})
     public String updateExamPage() {
-        return "admin/create-exam";
+        return "admin/exam/create-exam";
     }
 
     @GetMapping({"/admin/questions"})
     public String questionsManagement() {
-        return "questions-management";
+        return "admin/question/questions-management";
+    }
+
+    @GetMapping({"/admin/questions/create"})
+    public String questionsCreate() {
+        return "admin/question/create-question";
+    }
+
+    @GetMapping({"/admin/questions/update/{id}"})
+    public String questionsUpdate() {
+        return "admin/question/update-question";
     }
 }

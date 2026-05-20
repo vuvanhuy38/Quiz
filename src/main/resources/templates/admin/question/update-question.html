@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cập nhật câu hỏi</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin/layout.css">
+</head>
+
+<body>
+
+<div sec:authorize="hasRole('ADMIN')"
+     th:replace="~{fragments/navbar-admin :: navbarAdmin}">
+</div>
+
+<div class="main-content">
+
+    <div th:replace="~{fragments/topbar-admin :: topbarAdmin('Cập nhật câu hỏi')}"></div>
+
+    <div class="container mt-4">
+
+        <div class="card shadow-sm p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h4 class="mb-0">Thêm câu hỏi</h4>
+
+                <a href="/admin/questions"
+                   class="btn btn-outline-secondary">
+                    ← Trở về danh sách
+                </a>
+
+            </div>
+
+            <!-- CONTENT -->
+            <div class="mb-3">
+                <label class="form-label">Nội dung câu hỏi</label>
+                <textarea id="questionContent" class="form-control" rows="3"></textarea>
+            </div>
+
+            <!-- TYPE + LEVEL -->
+            <div class="row mb-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">Loại câu hỏi</label>
+                    <select id="questionType" class="form-select">
+                        <option value="SINGLE_CHOICE">SINGLE_CHOICE</option>
+                        <option value="MULTIPLE_CHOICE">MULTIPLE_CHOICE</option>
+                        <option value="TRUE_FALSE">TRUE_FALSE</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Độ khó</label>
+                    <select id="questionLevel" class="form-select">
+                        <option value="EASY">EASY</option>
+                        <option value="MEDIUM">MEDIUM</option>
+                        <option value="HARD">HARD</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="row mb-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">Category cha</label>
+                    <select id="parentCategory" class="form-select"></select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Category con</label>
+                    <select id="childCategory" class="form-select" disabled></select>
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- OPTIONS -->
+            <div id="optionsBox" class="mb-3"></div>
+
+            <button type="button"
+                    class="btn btn-outline-dark mt-2"
+                    id="btnAddOption">
+                &#x2295; Thêm đáp án
+            </button>
+
+            <hr>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-secondary w-50"
+                        onclick="window.location.href='/admin/questions'">
+                    Hủy
+                </button>
+                <button class="btn btn-primary w-50" id="btnSave">
+                    Cập nhật câu hỏi
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/admin/question/update-question.js"></script>
+
+</body>
+</html>

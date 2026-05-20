@@ -115,17 +115,11 @@ public class ExamServiceImpl implements ExamService {
                                   .orElseThrow(() ->  new RuntimeException("ko tìm thấy đề thi"));
 
         Category category = null;
-
         if (exam.getCategoryId() != null) {
-
-            category = categoryRepository
-                    .findById(exam.getCategoryId())
-                    .orElse(null);
+            category = categoryRepository.findById(exam.getCategoryId()).orElse(null);
         }
 
-
-        List<ExamQuestion> questions =
-                examQuestionRepository.findByExamId(exam.getId());
+        List<ExamQuestion> questions = examQuestionRepository.findByExamId(exam.getId());
 
         List<ExamQuestionItemDto> questionResponses = questions.stream()
                                                                .map(question -> ExamQuestionItemDto.builder()
