@@ -7,6 +7,7 @@ import com.webquiz.web.dto.request.questionBank.CreateQuestionRequest;
 import com.webquiz.web.dto.request.questionBank.UpdateQuestionRequest;
 import com.webquiz.web.dto.response.questionBank.QuestionBankDetailResponse;
 import com.webquiz.web.dto.response.questionBank.QuestionBankListResponse;
+import com.webquiz.web.dto.response.questionBank.QuestionBankModalResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -56,11 +57,12 @@ public class QuestionBankResources {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponsePage<List<QuestionBankListResponse>>> getList( @RequestParam(required = false) String type,
-                                                                                 @RequestParam(required = false) String level,
-                                                                                 @RequestParam(required = false,defaultValue = "") String content,
-                                                                                 Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(questionBankService.getList(pageable, type, level, content));
+    public ResponseEntity<ResponsePage<List<QuestionBankListResponse>>> getList(@RequestParam(required = false) String type,
+                                                                                @RequestParam(required = false) String level,
+                                                                                @RequestParam(required = false,defaultValue = "") String content,
+                                                                                @RequestParam(required = false) String categoryId,
+                                                                                Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(questionBankService.getList(pageable, type, level, content, categoryId));
     }
 
     @GetMapping("/detail/{id}")
@@ -71,4 +73,16 @@ public class QuestionBankResources {
                         .build()
         );
     }
+
+    @GetMapping("/modal")
+    public ResponseEntity<ResponsePage<List<QuestionBankModalResponse>>> getModalList(Pageable pageable,
+                                                                                      @RequestParam(required = false) String type,
+                                                                                      @RequestParam(required = false) String level,
+                                                                                      @RequestParam(required = false, defaultValue = "") String content,
+                                                                                      @RequestParam(required = false) String categoryId) {
+
+        return ResponseEntity.ok(questionBankService.getModelList(pageable, type, level, content, categoryId)
+        );
+    }
 }
+

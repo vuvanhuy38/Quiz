@@ -6,6 +6,7 @@ import com.webquiz.web.dto.request.questionBank.CreateQuestionRequest;
 import com.webquiz.web.dto.request.questionBank.UpdateQuestionRequest;
 import com.webquiz.web.dto.response.questionBank.QuestionBankDetailResponse;
 import com.webquiz.web.dto.response.questionBank.QuestionBankListResponse;
+import com.webquiz.web.dto.response.questionBank.QuestionBankModalResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -17,6 +18,13 @@ public interface QuestionBankService {
     ResponsePage<List<QuestionBankListResponse>> getList(Pageable pageable,
                                                          String type,
                                                          String level,
-                                                         String content);
+                                                         String content,
+                                                         String categoryId);
     QuestionBankDetailResponse getDetail(String id);
+
+    ResponsePage<List<QuestionBankModalResponse>> getModelList(Pageable pageable,
+                                                                        String type,
+                                                                        String level,
+                                                                        String content,
+                                                                        String categoryId);
 }

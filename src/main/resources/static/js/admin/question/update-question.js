@@ -45,11 +45,9 @@ async function loadQuestion() {
     document.getElementById("questionType").value = q.type || "";
     document.getElementById("questionLevel").value = q.level || "";
 
-    // Category — giống loadExam
-    if (q.parentCategoryId) {
-        parentCategory.value = q.parentCategoryId;
-        await loadChildCategories(q.parentCategoryId, q.categoryId);
-    }
+    // Category
+    parentCategory.value = q.parentCategoryId;
+    await loadChildCategories(q.parentCategoryId, q.categoryId);
 
     // Options
     renderOptionsFromData(q);

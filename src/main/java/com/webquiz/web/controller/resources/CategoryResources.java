@@ -85,4 +85,17 @@ public class CategoryResources {
                         .build()
         );
     }
+
+    @GetMapping("/children")
+    public ResponseEntity<Response<List<CategoryResponse>>> getAllChildCategories() {
+
+        List<CategoryResponse> data = categoryService.getAllChildCategories();
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<List<CategoryResponse>>builder()
+                        .message("Lấy danh sách category con thành công")
+                        .data(data)
+                        .build()
+        );
+    }
 }

@@ -12,9 +12,11 @@ public interface QuestionBankRepository extends MongoRepository<QuestionBank, St
     void deleteByCategoryId(String categoryId);
 
     @Query("{ $and: [ " +
-            "  { $or: [ { $expr: { $eq: [?0, null] } }, { type: ?0 } ] }, " +
-            "  { $or: [ { $expr: { $eq: [?1, null] } }, { level: ?1 } ] }, " +
-            "  { $or: [ { $expr: { $eq: [?2, ''] } }, { content: { $regex: ?2, $options: 'i' } } ] } " +
-            "] }")
-    Page<QuestionBank> findAllWithFilters(String type, String level, String content, Pageable pageable);
+           "  { $or: [ { $expr: { $eq: [?0, null] } }, { type: ?0 } ] }, " +
+           "  { $or: [ { $expr: { $eq: [?1, null] } }, { level: ?1 } ] }, " +
+           "  { $or: [ { $expr: { $eq: [?2, ''] } }, { content: { $regex: ?2, $options: 'i' } } ] }, " +
+           "  { $or: [ { $expr: { $eq: [?3, null] } }, { categoryId: ?3 } ] } " +
+           "] }")
+    Page<QuestionBank> findAllWithFilters(String type, String level, String content, String categoryId,
+                                          Pageable pageable);
 }

@@ -57,7 +57,7 @@
 
                         <!-- BACK BUTTON -->
                         <a href="/admin/exams"
-                           class="btn btn-outline-secondary btn-sm">
+                                class="btn btn-outline-secondary btn-sm">
 
                             <i class="bi bi-arrow-left"></i>
                             Trở về
@@ -360,6 +360,120 @@
 
         </div>
 
+    </div>
+
+    <!-- MODAL IMPORT BANK -->
+    <div class="modal fade" id="importBankModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Chọn câu hỏi từ Question Bank</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <!-- FILTER BAR -->
+                    <div class="row g-2 mb-3">
+
+                        <div class="col-md-4">
+                            <input type="text"
+                                    class="form-control"
+                                    id="bankContent"
+                                    placeholder="Tìm nội dung câu hỏi">
+                        </div>
+
+                        <div class="col-md-3">
+                            <select class="form-select" id="bankType">
+
+                                <option value="">
+                                    Tất cả loại
+                                </option>
+
+                                <option value="SINGLE_CHOICE">
+                                    SINGLE_CHOICE
+                                </option>
+
+                                <option value="MULTIPLE_CHOICE">
+                                    MULTIPLE_CHOICE
+                                </option>
+
+                                <option value="TRUE_FALSE">
+                                    TRUE_FALSE
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <select class="form-select" id="bankLevel">
+
+                                <option value="">
+                                    Tất cả độ khó
+                                </option>
+
+                                <option value="EASY">
+                                    EASY
+                                </option>
+
+                                <option value="MEDIUM">
+                                    MEDIUM
+                                </option>
+
+                                <option value="HARD">
+                                    HARD
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-2 d-grid">
+
+                            <button class="btn btn-dark"
+                                    id="btnSearchBank">
+
+                                <i class="bi bi-search"></i>
+                                Tìm kiếm
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- SELECT BAR -->
+                    <div class="d-flex justify-content-between align-items-center mb-2"
+                            id="bankSelectBar"
+                            style="display:none">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="selectAllBank">
+                            <label class="form-check-label">Chọn tất cả</label>
+                        </div>
+
+                        <span class="text-muted small" id="bankSelectedCount">
+                        0 câu được chọn
+                    </span>
+                    </div>
+
+                    <!-- LIST -->
+                    <div id="bankQuestionList"></div>
+
+                    <!-- PAGINATION -->
+                    <div class="d-flex justify-content-center mt-3" id="bankPagination"></div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button class="btn btn-dark" id="btnConfirmImport">
+                        <i class="bi bi-check-circle"></i> Import đã chọn
+                    </button>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <!-- SCRIPTS -->

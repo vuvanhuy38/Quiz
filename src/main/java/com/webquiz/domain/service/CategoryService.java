@@ -17,4 +17,5 @@ public interface CategoryService {
     void delete(String id);
     List<CategoryResponse> getParentCategories();
     List<CategoryResponse> getChildCategories(String parentId);
+    List<CategoryResponse> getAllChildCategories();
 }

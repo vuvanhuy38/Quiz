@@ -1,18 +1,22 @@
-package com.webquiz.web.dto.request.examQuestion;
+package com.webquiz.web.dto.response.questionBank;
 
 import com.webquiz.contact.enums.LevelType;
 import com.webquiz.contact.enums.QuestionType;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ExamQuestionRequest {
-    private String id;            // null → create, có giá trị → update
+@Builder
+public class QuestionBankModalResponse {
+    private String id;
     private String content;
+    private String categoryName;
     private QuestionType type;
-    private List<ExamOptionDto> options;
+    private LevelType level;
+
+    private List<OptionBankResponse> options;
     private String correctAnswer;
     private List<String> correctAnswerKeys;
-    private LevelType level;
 }

@@ -1,9 +1,11 @@
-const API_URL = "http://localhost:8080/api/exams/getAll";
+const API = "http://localhost:8080/api";
 
 let currentPage = 0;
 let pageSize = 10;
 
 document.addEventListener("DOMContentLoaded", () => {
+    loadCategories();
+
     loadExams();
 
     document.getElementById("filterBtn").addEventListener("click", () => {
@@ -13,12 +15,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("click", function (e) {
 
-    const btn = e.target.closest(".edit-exam-btn");
-    if (!btn) return;
+    // EDIT
+    const editBtn = e.target.closest(".edit-exam-btn");
 
-    const examId = btn.getAttribute("data-id");
+    if (editBtn) {
 
-    goToEditExam(examId);
+        const examId = editBtn.getAttribute("data-id");
+
+        goToEditExam(examId);
+
+        return;
+    }
+
+    // DELETE
+    const deleteBtn = e.target.closest(".delete-exam-btn");
+
+    if (deleteBtn) {
+
+        const examId = deleteBtn.getAttribute("data-id");
+
+        deleteExam(examId);
+    }
 });
 
 async function loadExams() {
@@ -35,7 +52,7 @@ async function loadExams() {
 
         const queryString = buildQuery(params);
 
-        const url = "http://localhost:8080/api/exams/getAll" + (queryString ? "?" + queryString : "");
+        const url = `${API}/exams/getAll${queryString ? `?${queryString}` : ""}`;
 
         const response = await fetch(url);
 
@@ -102,7 +119,8 @@ function renderTable(exams) {
                             <i class="bi bi-pencil-fill"></i>
                         </button>
 
-                        <button class="btn btn-sm btn-danger">
+                        <button class="btn btn-sm btn-danger delete-exam-btn"
+                                data-id="${exam.id}">
                             <i class="bi bi-trash-fill"></i>
                         </button>
                     </div>
@@ -234,4 +252,74 @@ function buildQuery(params) {
 
 function goToEditExam(examId) {
     window.location.href = `/admin/exams/update/${examId}`;
+}
+
+async function deleteExam(examId) {
+
+    const confirmDelete = confirm("Bạn có chắc muốn xoá đề thi này?");
+
+    if (!confirmDelete) return;
+
+    try {
+
+        const response = await fetch(
+            `${API}/exams/delete/${examId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const result = await response.json();
+
+        if (response.ok) {
+
+            alert(result.message || "Xoá thành công");
+
+            loadExams();
+
+        } else {
+
+            alert(result.message || "Xoá thất bại");
+        }
+
+    } catch (error) {
+
+        console.error("Lỗi xoá exam:", error);
+
+        alert("Có lỗi xảy ra khi xoá");
+    }
+}
+
+async function loadCategories() {
+
+    try {
+
+        const response = await fetch(
+            `${API}/category/children`
+        );
+
+        const result = await response.json();
+
+        const categories = result.data || [];
+
+        const categoryFilter =
+            document.getElementById("categoryFilter");
+
+        categoryFilter.innerHTML = `
+            <option value="">Tất cả danh mục</option>
+        `;
+
+        categories.forEach(category => {
+
+            categoryFilter.innerHTML += `
+                <option value="${category.id}">
+                    ${category.name}
+                </option>
+            `;
+        });
+
+    } catch (error) {
+
+        console.error("Lỗi load categories:", error);
+    }
 }

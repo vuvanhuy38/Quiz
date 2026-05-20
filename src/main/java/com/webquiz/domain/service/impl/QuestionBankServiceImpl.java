@@ -14,6 +14,7 @@ import com.webquiz.web.dto.request.questionBank.UpdateQuestionRequest;
 import com.webquiz.web.dto.response.questionBank.OptionBankResponse;
 import com.webquiz.web.dto.response.questionBank.QuestionBankDetailResponse;
 import com.webquiz.web.dto.response.questionBank.QuestionBankListResponse;
+import com.webquiz.web.dto.response.questionBank.QuestionBankModalResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -78,9 +79,9 @@ public class QuestionBankServiceImpl implements QuestionBankService {
     }
 
     @Override
-    public ResponsePage<List<QuestionBankListResponse>> getList(Pageable pageable, String type, String level, String content) {
+    public ResponsePage<List<QuestionBankListResponse>> getList(Pageable pageable, String type, String level, String content, String categoryId) {
         String normalizedcontent = Normalizer.normalize(content, Normalizer.Form.NFC);
-        Page<QuestionBank> page = questionBankRepository.findAllWithFilters( type, level, normalizedcontent, pageable);
+        Page<QuestionBank> page = questionBankRepository.findAllWithFilters( type, level, normalizedcontent, categoryId, pageable);
 
 
         List<QuestionBankListResponse> contents =
@@ -129,6 +130,40 @@ public class QuestionBankServiceImpl implements QuestionBankService {
                                          .correctAnswerKeys(question.getCorrectAnswerKeys())
                                          .level(question.getLevel())
                                          .build();
+    }
+
+    @Override
+    public ResponsePage<List<QuestionBankModalResponse>> getModelList(Pageable pageable, String type, String level, String content, String categoryId) {
+
+        String normalizedContent = (content == null) ? "" : Normalizer.normalize(content, Normalizer.Form.NFC);
+
+        Page<QuestionBank> page = questionBankRepository.findAllWithFilters(type, level, normalizedContent, categoryId, pageable);
+
+        List<QuestionBankModalResponse> contents = page.getContent().stream()
+                                                       .map(q -> {
+                                                           String categoryName = categoryRepository.findById(q.getCategoryId())
+                                                                                                   .map(Category::getName)
+                                                                                                   .orElse("Không có danh mục");
+                                                           return QuestionBankModalResponse.builder()
+                                                                                           .id(q.getId())
+                                                                                           .content(q.getContent())
+                                                                                           .categoryName(categoryName)
+                                                                                           .type(q.getType())
+                                                                                           .level(q.getLevel())
+                                                                                           .options(mapToOptionDtos(q.getOptions()))
+                                                                                           .correctAnswer(q.getCorrectAnswer())
+                                                                                           .correctAnswerKeys(q.getCorrectAnswerKeys())
+                                                                                           .build();
+                                                       })
+                                                       .toList();
+
+        return ResponsePage.<List<QuestionBankModalResponse>>builder()
+                           .data(contents)
+                           .totalElement(page.getTotalElements())
+                           .totalPage(page.getTotalPages())
+                           .pageSize(page.getSize())
+                           .pageIndex(page.getNumber())
+                           .build();
     }
 
     private List<OptionBank> mapOptions(List<OptionBankDto> options) {

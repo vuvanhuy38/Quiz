@@ -156,6 +156,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
+    @Override
+    public List<CategoryResponse> getAllChildCategories() {
+        List<Category> categories = categoryRepository.findByParentIdNotNull();
+        return categories.stream()
+                         .map(this::mapToResponse)
+                         .toList();
+    }
+
     private CategoryResponse mapToResponse(Category category) {
 
         return CategoryResponse.builder()
