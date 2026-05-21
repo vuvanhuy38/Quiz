@@ -45,10 +45,10 @@ public class CategoryResources {
     }
 
     @GetMapping("/getlist")
-    public ResponseEntity<ResponsePage<List<CategoryResponse>>> getAll(
-            Pageable pageable) {
+    public ResponseEntity<ResponsePage<List<CategoryResponse>>> getAll(@RequestParam(required = false, defaultValue = "") String name,
+                                                                       Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                categoryService.getAll(pageable)
+                categoryService.getAll(name, pageable)
         );
     }
 
@@ -95,6 +95,16 @@ public class CategoryResources {
                 Response.<List<CategoryResponse>>builder()
                         .message("Lấy danh sách category con thành công")
                         .data(data)
+                        .build()
+        );
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<Response<CategoryResponse>> getById(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<CategoryResponse>builder()
+                        .message("Lấy danh mục thành công")
+                        .data(categoryService.getById(id))
                         .build()
         );
     }

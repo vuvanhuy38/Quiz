@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -66,44 +67,44 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponsePage<List<CategoryResponse>> getAll(Pageable pageable) {
-        // chỉ phân trang category cha
+    public ResponsePage<List<CategoryResponse>> getAll(String name, Pageable pageable) {
+
+        String normalizedName = Normalizer.normalize(name, Normalizer.Form.NFC);
+
         Page<Category> parentCategories =
-                categoryRepository.findByParentIdIsNull(pageable);
+                categoryRepository.findAllWithFilters(normalizedName, pageable);
 
-        List<CategoryResponse> content =
-                parentCategories.map(parent -> {
+        List<CategoryResponse> content = parentCategories.map(parent -> {
 
-                    List<CategoryResponse> children =
-                            categoryRepository.findByParentId(parent.getId())
-                                              .stream()
-                                              .map(child -> CategoryResponse.builder()
-                                                                            .id(child.getId())
-                                                                            .name(child.getName())
-                                                                            .description(child.getDescription())
-                                                                            .parentId(child.getParentId())
-                                                                            .children(List.of())
-                                                                            .build())
-                                              .toList();
+            List<CategoryResponse> children = categoryRepository.findByParentId(parent.getId())
+                    .stream()
+                    .map(child -> CategoryResponse.builder()
+                            .id(child.getId())
+                            .name(child.getName())
+                            .description(child.getDescription())
+                            .parentId(child.getParentId())
+                            .children(List.of())
+                            .build())
+                    .toList();
 
-                    return CategoryResponse.builder()
-                                           .id(parent.getId())
-                                           .name(parent.getName())
-                                           .description(parent.getDescription())
-                                           .parentId(parent.getParentId())
-                                           .children(children)
-                                           .build();
+            return CategoryResponse.builder()
+                    .id(parent.getId())
+                    .name(parent.getName())
+                    .description(parent.getDescription())
+                    .parentId(parent.getParentId())
+                    .children(children)
+                    .build();
 
-                }).getContent();
+        }).getContent();
 
         return ResponsePage.<List<CategoryResponse>>builder()
-                           .message("Lấy danh sách category thành công")
-                           .data(content)
-                           .totalElement(parentCategories.getTotalElements())
-                           .totalPage(parentCategories.getTotalPages())
-                           .pageSize(parentCategories.getSize())
-                           .pageIndex(parentCategories.getNumber())
-                           .build();
+                .message("Lấy danh sách category thành công")
+                .data(content)
+                .totalElement(parentCategories.getTotalElements())
+                .totalPage(parentCategories.getTotalPages())
+                .pageSize(parentCategories.getSize())
+                .pageIndex(parentCategories.getNumber())
+                .build();
     }
 
     @Override
@@ -162,6 +163,20 @@ public class CategoryServiceImpl implements CategoryService {
         return categories.stream()
                          .map(this::mapToResponse)
                          .toList();
+    }
+
+    @Override
+    public CategoryResponse getById(String id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy danh mục"));
+
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .description(category.getDescription())
+                .parentId(category.getParentId())
+                .children(List.of())
+                .build();
     }
 
     private CategoryResponse mapToResponse(Category category) {

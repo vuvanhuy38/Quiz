@@ -1,0 +1,101 @@
+.category-content {
+    padding: 24px;
+}
+
+.top-action h3 {
+    color: #212529;
+}
+
+.filter-card,
+.table-card {
+    border: none;
+    border-radius: 14px;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-box input {
+    padding-left: 40px;
+    height: 45px;
+}
+
+.table thead th {
+    background: #f8f9fa;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.table tbody tr:hover {
+    background: #fafafa;
+}
+
+.badge {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+.create-btn {
+    height: 45px;
+    padding: 0 18px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.edit-btn,
+.delete-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+}
+
+.custom-pagination .page-link {
+    border-radius: 8px;
+    margin: 0 3px;
+    color: #212529;
+}
+
+.custom-pagination .active .page-link {
+    background: #212529;
+    border-color: #212529;
+    color: white;
+}
+
+.parent-row {
+    background: #f8f9fa;
+}
+
+.child-row {
+    background: #fff;
+}
+
+.category-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.parent-name {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.child-name {
+    padding-left: 28px;
+    color: #6c757d;
+}
+
+.tree-line {
+    color: #adb5bd;
+    font-weight: bold;
+}

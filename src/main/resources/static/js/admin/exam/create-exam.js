@@ -37,8 +37,8 @@ const importBankModal = new bootstrap.Modal(
 
 let questions = [];
 let editingIndex = null;
-let pageSize = 5;
-let bankPage = 0
+let pageSize = 4;
+let currentPage = 0;
 let bankPreviewData = [];
 let bankTotalPages = 0;
 let bankTotalElements = 0;
@@ -93,13 +93,12 @@ tabQuestion.onclick = () => {
     showQuestionTab();
 };
 
-// LOAD CHILD CATEGORY (reuse)
+// LOAD CHILD CATEGORY
 async function loadChildCategories(parentId, selectedId = null) {
     const res = await fetch(`${API}/category/children/${parentId}`);
     const result = await res.json();
 
     childCategory.disabled = false;
-
     childCategory.innerHTML = `
         <option value="">Chọn</option>
         ${(result.data || [])
@@ -121,13 +120,10 @@ async function loadExam(id) {
     timeLimitInput.value = data.timeLimit || "";
     statusInput.value = data.status || "";
 
-    // CATEGORY
     parentCategory.value = data.parentCategoryId;
     await loadChildCategories(data.parentCategoryId, data.categoryId);
 
-    // QUESTIONS
     questions = data.questions || [];
-
     document.getElementById("questionCount").innerText = questions.length;
     editingIndex = null;
 
@@ -169,9 +165,9 @@ function renderQuestions() {
             (q.correctAnswerKeys || []).includes(o.key);
 
         return `
-            <div class="border rounded p-2 mb-2 ${isCorrect ? 'border-success bg-light' : ''}">
-                <strong>${o.key}.</strong> ${o.text}
-            </div>`;
+                        <div class="border rounded p-2 mb-2 ${isCorrect ? 'border-success bg-light' : ''}">
+                            <strong>${o.key}.</strong> ${o.text}
+                        </div>`;
     }).join("")}
 
             </div>
@@ -292,7 +288,6 @@ function renderOptionInputs(type) {
     }
 
     btnAddOption.style.display = "inline-block";
-
     optionsContainer.innerHTML =
         createOptionRow("A", type) +
         createOptionRow("B", type) +
@@ -404,39 +399,31 @@ function editQuestion(index) {
         optionsContainer.innerHTML += createOptionRow(o.key, q.type, checked, o.text);
     });
 
-    if (q.type === "TRUE_FALSE") {
-        btnAddOption.style.display = "none";
-    } else {
-        btnAddOption.style.display = "inline-block";
-    }
+    btnAddOption.style.display = q.type === "TRUE_FALSE" ? "none" : "inline-block";
 
     addQuestionModal.show();
 }
 
 // ================= BANK MODAL =================
 btnImportBank.onclick = () => {
-
     if (!childCategory.value) {
         alert("Vui lòng chọn danh mục con");
         return;
     }
 
-    bankPage = 0;
+    currentPage = 0;
     bankPreviewData = [];
 
     document.getElementById("bankQuestionList").innerHTML = "";
     document.getElementById("bankSelectBar").style.display = "none";
 
-    loadBankModal(0);
+    loadBankModal();
     importBankModal.show();
 };
 
-async function loadBankModal(page = 0) {
-
-    bankPage = page;
-
+async function loadBankModal() {
     const params = {
-        page: page,
+        page: currentPage,
         size: pageSize,
         content: document.getElementById("bankContent")?.value || "",
         type: document.getElementById("bankType")?.value || "",
@@ -448,39 +435,32 @@ async function loadBankModal(page = 0) {
     const result = await res.json();
 
     bankPreviewData = result.data || [];
-
     bankTotalPages = result.totalPage || 0;
     bankTotalElements = result.totalElement || 0;
 
     renderBankList();
-    renderBankPagination();
+    renderBankPagination(bankTotalPages, currentPage);
 }
 
 // ================= RENDER BANK =================
 function renderBankList() {
-
     const container = document.getElementById("bankQuestionList");
     const bar = document.getElementById("bankSelectBar");
 
     if (!bankPreviewData.length) {
-
         container.innerHTML = `
             <div class="alert alert-secondary">
                 Không tìm thấy câu hỏi
             </div>
         `;
-
         bar.style.display = "none";
-
         return;
     }
 
     bar.style.display = "flex";
-
     updateBankSelectedCount();
 
     container.innerHTML = bankPreviewData.map((q, i) => {
-
         const levelClass =
             q.level === "EASY"
                 ? "bg-success"
@@ -489,48 +469,32 @@ function renderBankList() {
                     : "bg-danger";
 
         const optionsHtml = (q.options || []).map(o => {
-
             const isCorrect =
                 q.correctAnswer === o.key ||
                 (q.correctAnswerKeys || []).includes(o.key);
 
             return `
-                <div class="border rounded p-2 mb-2 ${
-                isCorrect ? 'border-success bg-light' : ''
-            }">
-
+                <div class="border rounded p-2 mb-2 ${isCorrect ? 'border-success bg-light' : ''}">
                     <div class="d-flex justify-content-between align-items-center">
-
                         <div>
                             <strong>${o.key}.</strong> ${o.text}
                         </div>
-
-                        ${
-                isCorrect
-                    ? `<span class="badge bg-success">Đúng</span>`
-                    : ''
-            }
-
+                        ${isCorrect ? `<span class="badge bg-success">Đúng</span>` : ''}
                     </div>
-
                 </div>
             `;
         }).join("");
 
         return `
             <div class="card mb-3 shadow-sm">
-
                 <div class="card-body">
-
                     <div class="d-flex gap-3 align-items-start">
 
                         <!-- CHECKBOX -->
                         <div class="pt-1">
-
                             <input type="checkbox"
                                    class="form-check-input bank-check"
                                    data-index="${i}">
-
                         </div>
 
                         <!-- CONTENT -->
@@ -538,21 +502,10 @@ function renderBankList() {
 
                             <!-- HEADER -->
                             <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-
                                 <div class="d-flex flex-wrap gap-2">
-
-                                    <span class="badge bg-dark">
-                                        ${q.type}
-                                    </span>
-
-                                    <span class="badge ${levelClass}">
-                                        ${q.level}
-                                    </span>
-
-                                    <span class="badge bg-info text-dark">
-                                        ${q.categoryName || 'Không có danh mục'}
-                                    </span>
-
+                                    <span class="badge bg-dark">${q.type}</span>
+                                    <span class="badge ${levelClass}">${q.level}</span>
+                                    <span class="badge bg-info text-dark">${q.categoryName || 'Không có danh mục'}</span>
                                 </div>
 
                                 <!-- TOGGLE -->
@@ -560,43 +513,31 @@ function renderBankList() {
                                         type="button"
                                         data-bs-toggle="collapse"
                                         data-bs-target="#bankOption${i}">
-
                                     <i class="bi bi-eye"></i>
                                     Xem đáp án
-
                                 </button>
-
                             </div>
 
                             <!-- QUESTION -->
-                            <p class="fw-bold fs-5 mt-3 mb-2">
-                                ${q.content}
-                            </p>
+                            <p class="fw-bold fs-5 mt-3 mb-2">${q.content}</p>
 
                             <!-- OPTIONS -->
                             <div class="collapse" id="bankOption${i}">
-
                                 <div class="mt-3">
                                     ${optionsHtml}
                                 </div>
-
                             </div>
 
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
         `;
     }).join("");
 
-    // CHECKBOX EVENT
-    document.querySelectorAll(".bank-check")
-        .forEach(cb => {
-            cb.onchange = updateBankSelectedCount;
-        });
+    document.querySelectorAll(".bank-check").forEach(cb => {
+        cb.onchange = updateBankSelectedCount;
+    });
 }
 
 function updateBankSelectedCount() {
@@ -614,22 +555,15 @@ document.getElementById("selectAllBank").onchange = function () {
 
 // ================= SEARCH BANK =================
 document.getElementById("btnSearchBank").onclick = async () => {
-
-    bankPage = 0;
-
-    // reset select all
     document.getElementById("selectAllBank").checked = false;
-
-    await loadBankModal(0);
+    currentPage = 0;
+    await loadBankModal();
 };
 
 // ================= CONFIRM IMPORT =================
 document.getElementById("btnConfirmImport").onclick = async () => {
-
-    // lấy danh sách checkbox được chọn
     const checkedQuestions = document.querySelectorAll(".bank-check:checked");
 
-    // chưa chọn câu hỏi
     if (checkedQuestions.length === 0) {
         alert("Chưa chọn câu hỏi");
         return;
@@ -637,134 +571,90 @@ document.getElementById("btnConfirmImport").onclick = async () => {
 
     const questionBankIds = [];
 
-    // duyệt từng checkbox
     checkedQuestions.forEach(checkbox => {
-
-        // lấy vị trí câu hỏi trong mảng bankPreviewData
         const questionIndex = checkbox.dataset.index;
-
-        // lấy object câu hỏi
         const questionData = bankPreviewData[questionIndex];
-
-        // thêm id vào danh sách
         questionBankIds.push(questionData.id);
-
     });
 
-    // gọi API preview
     const response = await fetch(`${API}/exam-question/preview`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            questionBankIds: questionBankIds
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ questionBankIds })
     });
 
     const result = await response.json();
-
-    // thêm câu hỏi preview vào danh sách đề thi
     const previewQuestions = result.data || [];
 
     previewQuestions.forEach(question => {
         questions.push(question);
     });
 
-    // cập nhật số lượng
     document.getElementById("questionCount").innerText = questions.length;
-
-    // render lại UI
     renderQuestions();
-
-    // đóng modal
     importBankModal.hide();
 };
 
-function renderBankPagination() {
+// ================= PAGINATION =================
+function changePage(page) {
+    currentPage = page;
+    loadBankModal();
+}
 
+function renderBankPagination(totalPage, currentPage) {
     const pagination = document.getElementById("bankPagination");
 
-    let html = `
-        <nav>
-            <ul class="pagination">
-    `;
+    let html = `<nav><ul class="pagination">`;
 
     // PREVIOUS
     html += `
-        <li class="page-item ${bankPage === 0 ? 'disabled' : ''}">
-
-            <button class="page-link"
-                    onclick="loadBankModal(${bankPage - 1})">
-
+        <li class="page-item ${currentPage === 0 ? 'disabled' : ''}">
+            <button class="page-link" onclick="changePage(${currentPage - 1})">
                 <i class="bi bi-chevron-left"></i>
-
             </button>
-
         </li>
     `;
 
-    // PAGE NUMBER
-    for (let i = 0; i < bankTotalPages; i++) {
-
+    // PAGE NUMBERS
+    for (let i = 0; i < totalPage; i++) {
         html += `
-            <li class="page-item ${bankPage === i ? 'active' : ''}">
-
-                <button class="page-link"
-                        onclick="loadBankModal(${i})">
-
-                    ${i + 1}
-
-                </button>
-
+            <li class="page-item ${currentPage === i ? 'active' : ''}">
+                <button class="page-link" onclick="changePage(${i})">${i + 1}</button>
             </li>
         `;
     }
 
-    // nếu chỉ có 1 page thì vẫn render page 1
-    if (bankTotalPages === 0) {
-
+    if (totalPage === 0) {
         html += `
             <li class="page-item active">
-                <button class="page-link">
-                    1
-                </button>
+                <button class="page-link">1</button>
             </li>
         `;
     }
 
     // NEXT
     html += `
-        <li class="page-item ${bankPage >= bankTotalPages - 1 ? 'disabled' : ''}">
-
-            <button class="page-link"
-                    onclick="loadBankModal(${bankPage + 1})">
-
+        <li class="page-item ${currentPage >= totalPage - 1 ? 'disabled' : ''}">
+            <button class="page-link" onclick="changePage(${currentPage + 1})">
                 <i class="bi bi-chevron-right"></i>
-
             </button>
-
         </li>
     `;
 
-    html += `
-            </ul>
-        </nav>
-    `;
-
+    html += `</ul></nav>`;
     pagination.innerHTML = html;
 }
 
-// CATEGORY
+// ================= CATEGORY =================
 async function loadParents() {
     const res = await fetch(`${API}/category/parents`);
     const result = await res.json();
 
     parentCategory.innerHTML = `
         <option value="">Chọn</option>
-        ${(result.data || []).map(c =>
-        `<option value="${c.id}">${c.name}</option>`
-    ).join("")}
+        ${(result.data || [])
+        .map(c => `<option value="${c.id}">${c.name}</option>`)
+        .join("")}
     `;
 }
 
@@ -782,7 +672,6 @@ parentCategory.onchange = async () => {
 
 // ================= QUERY BUILDER =================
 function buildQuery(params) {
-
     const query = new URLSearchParams();
 
     for (const key in params) {

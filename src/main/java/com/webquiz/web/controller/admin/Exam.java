@@ -34,4 +34,9 @@ public class Exam {
     public String questionsUpdate() {
         return "admin/question/update-question";
     }
+
+    @GetMapping({"/admin/category"})
+    public String categoryManagement() {
+        return "admin/category/category-management";
+    }
 }
