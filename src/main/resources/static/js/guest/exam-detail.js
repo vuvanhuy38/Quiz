@@ -104,7 +104,7 @@ async function loadExamDetail() {
                     </div>
 
                     <div class="mt-4">
-                        <a href="/exams/start/${exam.id}" 
+                        <a href="/user/do-exam/${examId}" 
                            class="btn btn-primary">
                             Làm bài
                         </a>

@@ -16,7 +16,6 @@ import com.webquiz.web.dto.response.attempt.OptionResponse;
 import com.webquiz.web.dto.response.attempt.StartAttemptResponse;
 import com.webquiz.web.dto.response.attempt.SubmitExamResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,17 +33,19 @@ public class ExamAttemptServiceImpl implements ExamAttemptService {
     private final ExamRepository examRepository;
 
     @Override
-    @Transactional
     public StartAttemptResponse startAttempt(String examId) {
 
         List<ExamQuestion> questions = questionRepository.findByExamId(examId);
+
+        Exam exam = examRepository.findById(examId)
+                                  .orElseThrow(() -> new RuntimeException("Không tìm thấy đề thi"));
 
         CustomUserDetails user = SessionUtil.getCurrentUser();
         String username = user.getId();
 
         ExamAttempt attempt = ExamAttempt.builder()
-                                         .examId(examId)
-                                         .username(username)
+                                         .examId(exam.getId())
+                                         .userId(username)
                                          .startedAt(LocalDateTime.now())
                                          .status(AttemptStatusType.IN_PROGRESS)
                                          .totalQuestions(questions.size())
@@ -54,9 +55,8 @@ public class ExamAttemptServiceImpl implements ExamAttemptService {
 
         return StartAttemptResponse.builder()
                                    .attemptId(saved.getId())
-                                   .examId(examId)
-                                   .totalQuestions(questions.size())
                                    .startedAt(saved.getStartedAt())
+                                   .timeLimit(exam.getTimeLimit())
                                    .build();
     }
 
@@ -120,6 +120,11 @@ public class ExamAttemptServiceImpl implements ExamAttemptService {
                                     .isCorrect(isCorrect)
                                     .pointsEarned(points)
                                     .build();
+
+            System.out.println("REQUEST = " + item);
+            System.out.println("FOUND QUESTION = " + question);
+            System.out.println("CORRECT = " + question.getCorrectAnswer());
+            System.out.println("USER = " + item.getSelectedAnswer());
 
             answerList.add(answer);
         }

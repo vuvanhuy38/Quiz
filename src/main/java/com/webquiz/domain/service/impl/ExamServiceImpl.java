@@ -78,7 +78,7 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamResponse getHome() {
         List<Exam> featured = examRepository
-                .findTop10ByStatusOrderByAttemptCountDesc(StatusExamType.INACTIVE);
+                .findTop10ByStatusOrderByAttemptCountDesc(StatusExamType.ACTIVE);
 
         List<Exam> latest = examRepository
                 .findTop10ByStatusOrderByCreatedAtDesc(StatusExamType.ACTIVE);

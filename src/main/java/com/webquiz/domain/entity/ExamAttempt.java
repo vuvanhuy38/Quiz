@@ -14,8 +14,8 @@ import java.util.List;
 @Document(collection = "exam_attempts")
 public class ExamAttempt extends BaseEntity {
 
-    @Field(name = "username")
-    private String username;
+    @Field(name = "user_id")
+    private String userId;
 
     @Field(name = "exam_id")
     private String examId;

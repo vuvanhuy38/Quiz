@@ -5,37 +5,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class Exam {
-    @GetMapping({"/admin/exams"})
+    @GetMapping("/admin/exams")
     public String examManagement() {
         return "admin/exam/exam-management";
     }
 
-    @GetMapping({"/admin/exams/create"})
+    @GetMapping("/admin/exams/create")
     public String examCreate() {
         return "admin/exam/create-exam";
     }
 
-    @GetMapping({"/admin/exams/update/{id}"})
+    @GetMapping("/admin/exams/update/{id}")
     public String updateExamPage() {
         return "admin/exam/create-exam";
     }
 
-    @GetMapping({"/admin/questions"})
+    @GetMapping("/admin/questions")
     public String questionsManagement() {
         return "admin/question/questions-management";
     }
 
-    @GetMapping({"/admin/questions/create"})
+    @GetMapping("/admin/questions/create")
     public String questionsCreate() {
         return "admin/question/create-question";
     }
 
-    @GetMapping({"/admin/questions/update/{id}"})
+    @GetMapping("/admin/questions/update/{id}")
     public String questionsUpdate() {
         return "admin/question/update-question";
     }
 
-    @GetMapping({"/admin/category"})
+    @GetMapping("/admin/category")
     public String categoryManagement() {
         return "admin/category/category-management";
     }

@@ -34,4 +34,7 @@ public class QuestionBank extends BaseEntity {
 
     @Field(name = "level")
     private LevelType level;
+
+    @Field(name = "create_by")
+    private String createdBy;
 }

@@ -11,9 +11,7 @@ public class StartAttemptResponse {
 
     private String attemptId;
 
-    private String examId;
-
-    private Integer totalQuestions;
-
     private LocalDateTime startedAt;
+
+    private Integer timeLimit;
 }
