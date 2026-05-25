@@ -39,4 +39,9 @@ public class Exam {
     public String categoryManagement() {
         return "admin/category/category-management";
     }
+
+    @GetMapping("/admin/users")
+    public String userManagement() {
+        return "admin/user/user-management";
+    }
 }
