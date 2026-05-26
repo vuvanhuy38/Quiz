@@ -34,7 +34,7 @@ async function loadCategories() {
         const result = await res.json();
 
         renderTable(result.data || []);
-        renderPagination(result.totalPage, result.totalElement);
+        renderPagination(result.totalPage, result.pageIndex);
 
     } catch (err) {
         console.error(err);
@@ -109,7 +109,7 @@ function renderTable(data) {
 }
 
 // ================= PAGINATION =================
-function renderPagination(totalPage, totalElement) {
+function renderPagination(totalPage, currentPage) {
     const pagination = document.getElementById("pagination");
     if (!pagination) return;
 

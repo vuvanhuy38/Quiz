@@ -7,18 +7,24 @@ import com.webquiz.domain.service.UserService;
 import com.webquiz.web.dto.common.ResponsePage;
 import com.webquiz.web.dto.response.user.UserItemResponse;
 import lombok.AllArgsConstructor;
+import com.webquiz.web.dto.response.user.UserProfileResponse;
+import com.webquiz.web.dto.request.user.UpdateProfileRequest;
+import com.webquiz.web.dto.request.user.ChangePasswordRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void blockUser(String id) {
@@ -81,5 +87,63 @@ public class UserServiceImpl implements UserService {
                            .pageSize(userPage.getSize())
                            .pageIndex(userPage.getNumber())
                            .build();
+    }
+
+    @Override
+    public UserProfileResponse getUserProfile(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại"));
+
+        return UserProfileResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .role(user.getRole())
+                .build();
+    }
+
+    @Override
+    public void updateProfile(String userId, UpdateProfileRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại"));
+
+        // Kiểm tra email trùng lặp nếu email thay đổi
+        if (request.getEmail() != null && !request.getEmail().equalsIgnoreCase(user.getEmail())) {
+            Optional<User> existingEmailUser = userRepository.findByEmail(request.getEmail());
+            if (existingEmailUser.isPresent() && !existingEmailUser.get().getId().equals(userId)) {
+                throw new RuntimeException("Email đã được sử dụng bởi tài khoản khác");
+            }
+            user.setEmail(request.getEmail());
+        }
+
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setPhone(request.getPhone());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(String userId, ChangePasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại"));
+
+        // Kiểm tra mật khẩu cũ
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new RuntimeException("Mật khẩu cũ không chính xác");
+        }
+
+        // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Xác nhận mật khẩu mới không khớp");
+        }
+
+        // Cập nhật mật khẩu mới đã được mã hóa
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
     }
 }

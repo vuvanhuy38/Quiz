@@ -25,79 +25,84 @@
     <div th:replace="~{fragments/topbar-admin :: topbarAdmin('Quản lý người dùng')}">
     </div>
 
-    <div class="container-fluid">
+    <div class="user-content">
+      <div class="container-fluid">
 
-      <!-- Header -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h3 class="fw-bold">Danh sách người dùng</h3>
-          <p class="text-muted mb-0">Quản lý tài khoản hệ thống</p>
-        </div>
-      </div>
-
-      <!-- Filter -->
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <div class="row g-3">
-
-            <div class="col-md-4">
-              <input type="text" id="nameSearch" class="form-control"
-                      placeholder="Tìm theo tên...">
-            </div>
-
-            <div class="col-md-3">
-              <input type="text" id="emailSearch" class="form-control"
-                      placeholder="Email...">
-            </div>
-
-            <div class="col-md-3">
-              <input type="text" id="phoneSearch" class="form-control"
-                      placeholder="Số điện thoại...">
-            </div>
-
-            <div class="col-md-2">
-              <button class="btn btn-dark w-100" id="filterBtn">
-                Lọc
-              </button>
-            </div>
-
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h3 class="fw-bold">Danh sách người dùng</h3>
+            <p class="text-muted mb-0">Quản lý tài khoản hệ thống</p>
           </div>
         </div>
-      </div>
 
-      <!-- Table -->
-      <div class="card shadow-sm">
+        <!-- Filter -->
+        <div class="card filter-card shadow-sm mb-4">
+          <div class="card-body">
+            <div class="row g-3">
 
-        <div class="table-responsive">
-          <table class="table align-middle mb-0">
-            <thead>
-            <tr>
-              <th>STT</th>
-              <th>Họ tên</th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th class="text-center">Hành động</th>
-            </tr>
-            </thead>
+              <div class="col-md-4">
+                <div class="search-box">
+                  <i class="bi bi-search"></i>
+                  <input type="text" id="nameSearch" class="form-control"
+                          placeholder="Tìm theo tên...">
+                </div>
+              </div>
 
-            <tbody id="userTableBody"></tbody>
-          </table>
+              <div class="col-md-3">
+                <input type="text" id="emailSearch" class="form-control"
+                        placeholder="Email...">
+              </div>
+
+              <div class="col-md-3">
+                <input type="text" id="phoneSearch" class="form-control"
+                        placeholder="Số điện thoại...">
+              </div>
+
+              <div class="col-md-2">
+                <button class="btn btn-dark w-100" id="filterBtn">
+                  Lọc
+                </button>
+              </div>
+
+            </div>
+          </div>
         </div>
 
-        <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center mt-3 p-3">
+        <!-- Table -->
+        <div class="card table-card shadow-sm">
 
-          <div id="tableInfo" class="text-muted small"></div>
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+              <tr>
+                <th>STT</th>
+                <th>Họ tên</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th class="text-center">Hành động</th>
+              </tr>
+              </thead>
 
-          <ul class="pagination mb-0" id="pagination"></ul>
+              <tbody id="userTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="d-flex justify-content-between align-items-center mt-3 p-3">
+
+            <div id="tableInfo" class="text-muted small"></div>
+
+            <ul class="pagination custom-pagination mb-0" id="pagination"></ul>
+
+          </div>
 
         </div>
 
       </div>
-
     </div>
   </div>
 

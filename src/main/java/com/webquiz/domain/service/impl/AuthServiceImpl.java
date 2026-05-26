@@ -7,7 +7,6 @@ import com.webquiz.domain.repository.UserRepository;
 import com.webquiz.domain.service.AuthService;
 import com.webquiz.web.dto.request.auth.RegisterRequest;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +26,10 @@ public class AuthServiceImpl implements AuthService {
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email đã tồn tại");
+        }
+
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Mật khẩu nhập lại không khớp");
         }
 
         User user = User.builder()

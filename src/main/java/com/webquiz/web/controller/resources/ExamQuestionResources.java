@@ -3,6 +3,7 @@ package com.webquiz.web.controller.resources;
 import com.webquiz.domain.service.ExamQuestionService;
 import com.webquiz.web.dto.common.Response;
 import com.webquiz.web.dto.request.examQuestion.ExamQuestionRequest;
+import com.webquiz.web.dto.request.examQuestion.ImportQuestionBankRequest;
 import com.webquiz.web.dto.request.examQuestion.QuestionBankIdsRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -32,10 +33,10 @@ public class ExamQuestionResources {
 
     @PostMapping("/preview")
     public ResponseEntity<Response<List<ExamQuestionRequest>>> preview(
-            @RequestBody QuestionBankIdsRequest request) {
+            @RequestBody ImportQuestionBankRequest request) {
 
         List<ExamQuestionRequest> data =
-                examQuestionService.previewFromBank(request.getQuestionBankIds());
+                examQuestionService.previewFromBank(request);
 
         return ResponseEntity.ok(
                 Response.<List<ExamQuestionRequest>>builder()

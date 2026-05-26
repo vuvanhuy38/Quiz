@@ -1,9 +1,14 @@
 package com.webquiz.web.controller.resources;
 
+import com.webquiz.contact.SessionUtil;
 import com.webquiz.domain.service.UserService;
 import com.webquiz.web.dto.common.Response;
 import com.webquiz.web.dto.common.ResponsePage;
 import com.webquiz.web.dto.response.user.UserItemResponse;
+import com.webquiz.web.dto.response.user.UserProfileResponse;
+import com.webquiz.web.dto.request.user.UpdateProfileRequest;
+import com.webquiz.web.dto.request.user.ChangePasswordRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -62,6 +67,40 @@ public class UserResources {
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 userService.getAllUsers(pageable, name, phone, email)
+        );
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<Response<UserProfileResponse>> getProfile() {
+        String userId = SessionUtil.getCurrentUser().getId();
+        UserProfileResponse profile = userService.getUserProfile(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<UserProfileResponse>builder()
+                        .data(profile)
+                        .message("Lấy thông tin tài khoản thành công")
+                        .build()
+        );
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<Response<Void>> updateProfile(@Valid @RequestBody UpdateProfileRequest request) {
+        String userId = SessionUtil.getCurrentUser().getId();
+        userService.updateProfile(userId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<Void>builder()
+                        .message("Cập nhật thông tin tài khoản thành công")
+                        .build()
+        );
+    }
+
+    @PutMapping("/profile/change-password")
+    public ResponseEntity<Response<Void>> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        String userId = SessionUtil.getCurrentUser().getId();
+        userService.changePassword(userId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<Void>builder()
+                        .message("Đổi mật khẩu thành công")
+                        .build()
         );
     }
 }

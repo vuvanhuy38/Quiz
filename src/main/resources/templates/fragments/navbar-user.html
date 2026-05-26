@@ -1,29 +1,38 @@
-<!DOCTYPE html>
-<html lang="vi"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<nav class="navbar navbar-expand-lg bg-white"
+     th:fragment="navbarUser" xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<body>
+    <div class="container">
 
-    <nav class="navbar navbar-expand-lg bg-white"
-            th:fragment="navbarUser">
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold text-primary" href="/">
+            Quiz App
+        </a>
 
-        <div class="container">
+        <!-- Menu -->
+        <div class="navbar-nav flex-row gap-3">
 
-            <a class="navbar-brand fw-bold text-primary" href="/">Quiz App</a>
+            <a class="nav-link fw-bold text-primary" href="/user/history">
+                Lịch sử làm bài
+            </a>
 
-            <div class="d-flex align-items-center gap-3">
+            <a class="nav-link fw-bold text-primary" href="/user/profile">
+                Tài khoản
+            </a>
+
+        </div>
+
+        <!-- User info -->
+        <div class="d-flex align-items-center gap-3 ms-auto">
 
             <span>
-                <b sec:authentication="principal.fullName"></b>
+                <b id="navbarUserFullName" sec:authentication="principal.fullName"></b>
             </span>
 
-                <form th:action="@{/logout}" method="post">
-                    <button class="btn btn-danger">Đăng xuất</button>
-                </form>
-            </div>
-        </div>
-    </nav>
+            <form th:action="@{/logout}" method="post">
+                <button class="btn btn-danger">Đăng xuất</button>
+            </form>
 
-</body>
-</html>
+        </div>
+
+    </div>
+</nav>

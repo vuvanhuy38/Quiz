@@ -128,35 +128,64 @@ function renderStatus(status) {
     return `<span class="badge bg-dark">UNKNOWN</span>`;
 }
 
-function renderPagination(totalPage, pageIndex) {
+function renderPagination(totalPage, currentPage) {
 
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = "";
 
+    // Prev button
     pagination.innerHTML += `
-        <li class="page-item ${pageIndex === 0 ? "disabled" : ""}">
-            <button class="page-link" onclick="changePage(${pageIndex - 1})">‹</button>
+        <li class="page-item ${currentPage === 0 ? "disabled" : ""}">
+            <button class="page-link" onclick="changePage(${currentPage - 1})">‹</button>
         </li>
     `;
 
-    for (let i = 0; i < totalPage; i++) {
+    // First page
+    pagination.innerHTML += `
+        <li class="page-item ${currentPage === 0 ? "active" : ""}">
+            <button class="page-link" onclick="changePage(0)">1</button>
+        </li>
+    `;
+
+    // Dấu ... đầu
+    if (currentPage > 2) {
+        pagination.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+    }
+
+    // Các page gần currentPage
+    for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+        if (i > 0 && i < totalPage - 1) {
+            pagination.innerHTML += `
+                <li class="page-item ${i === currentPage ? "active" : ""}">
+                    <button class="page-link" onclick="changePage(${i})">${i + 1}</button>
+                </li>
+            `;
+        }
+    }
+
+    // Dấu ... cuối
+    if (currentPage < totalPage - 3) {
+        pagination.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+    }
+
+    // Last page
+    if (totalPage > 1) {
         pagination.innerHTML += `
-            <li class="page-item ${i === pageIndex ? "active" : ""}">
-                <button class="page-link" onclick="changePage(${i})">
-                    ${i + 1}
-                </button>
+            <li class="page-item ${currentPage === totalPage - 1 ? "active" : ""}">
+                <button class="page-link" onclick="changePage(${totalPage - 1})">${totalPage}</button>
             </li>
         `;
     }
 
+    // Next button
     pagination.innerHTML += `
-        <li class="page-item ${pageIndex === totalPage - 1 ? "disabled" : ""}">
-            <button class="page-link" onclick="changePage(${pageIndex + 1})">›</button>
+        <li class="page-item ${currentPage === totalPage - 1 ? "disabled" : ""}">
+            <button class="page-link" onclick="changePage(${currentPage + 1})">›</button>
         </li>
     `;
 
     document.getElementById("tableInfo").innerText =
-        `Trang ${pageIndex + 1} / ${totalPage}`;
+        `Trang ${currentPage + 1} / ${totalPage}`;
 }
 
 function changePage(page) {

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Lịch sử làm bài</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/attempt_history.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-light">
+
+  <div sec:authorize="hasRole('USER')" th:replace="~{fragments/navbar-user :: navbarUser}"></div>
+
+  <div class="container py-5">
+    <div class="glass-card mb-4 p-4">
+      <h2 class="fw-bold mb-3">Biểu đồ tiến độ</h2>
+      <canvas id="trendChart" height="100"></canvas>
+    </div>
+
+    <div class="glass-card p-4">
+      <h2 class="fw-bold mb-4">Lịch sử làm bài</h2>
+      
+      <!-- Filter Bar -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <input type="text" id="filterExamTitle" class="form-control" placeholder="Tên bài thi...">
+        </div>
+        <div class="col-md-3">
+          <input type="date" id="filterStartDateFrom" class="form-control" placeholder="Từ ngày">
+        </div>
+        <div class="col-md-3">
+          <input type="date" id="filterStartDateTo" class="form-control" placeholder="Đến ngày">
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100" onclick="applyFilters()">Lọc</button>
+        </div>
+      </div>
+
+      <!-- List -->
+      <div class="table-responsive">
+        <table class="table table-hover align-middle custom-table">
+          <thead>
+            <tr>
+              <th>Bài thi</th>
+              <th>Điểm</th>
+              <th>Trạng thái</th>
+              <th>Ngày thi</th>
+              <th>Thời gian</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <!-- Data will be rendered here by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+
+        <div id="tableInfo" class="text-muted small">
+          <!-- ví dụ: 1 - 10 / 100 -->
+        </div>
+
+        <ul class="pagination custom-pagination mb-0" id="pagination"></ul>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/js/attempt_history.js"></script>
+</body>
+</html>

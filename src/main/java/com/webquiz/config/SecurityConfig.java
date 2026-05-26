@@ -24,9 +24,9 @@ public class SecurityConfig {
                                      "/logout").permitAll()
                     .requestMatchers("/api/exams/home", "/js/**", "/css/**", "/home",
                                      "/api/exams/search", "/api/exams/detail/*", "/detail/*").permitAll()
-                    .requestMatchers("/api/attempts/**").hasRole("USER")
+                    .requestMatchers("/api/attempts/**", "/user/history/**","/user/**").hasRole("USER")
                     .requestMatchers("/api/category/**", "/api/question-bank/**", "/api/exams/**",
-                                     "/api/exam-question/**").hasRole("ADMIN")
+                                     "/api/exam-question/**","/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
             .formLogin(form -> form

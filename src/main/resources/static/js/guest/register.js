@@ -37,6 +37,7 @@ form.addEventListener("submit", async (e) => {
         email: document.getElementById("email").value,
         phone: document.getElementById("phone").value,
         password: document.getElementById("password").value,
+        confirmPassword: document.getElementById("confirmPassword").value,
         firstName: document.getElementById("firstName").value,
         lastName: document.getElementById("lastName").value
     };

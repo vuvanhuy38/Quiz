@@ -11,6 +11,7 @@ import com.webquiz.domain.service.ExamQuestionService;
 import com.webquiz.domain.service.QuestionBankService;
 import com.webquiz.web.dto.request.examQuestion.ExamOptionDto;
 import com.webquiz.web.dto.request.examQuestion.ExamQuestionRequest;
+import com.webquiz.web.dto.request.examQuestion.ImportQuestionBankRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,10 +75,10 @@ public class ExamQuestionServiceImpl implements ExamQuestionService {
     }
 
     @Override
-    public List<ExamQuestionRequest> previewFromBank(List<String> questionBankIds) {
+    public List<ExamQuestionRequest> previewFromBank(ImportQuestionBankRequest request) {
 
         List<QuestionBank> banks =
-                questionBankRepository.findAllById(questionBankIds);
+                questionBankRepository.findAllById(request.getQuestionBankIds());
 
         if (banks.isEmpty()) {
             throw new RuntimeException("Không tìm thấy câu hỏi");

@@ -14,4 +14,19 @@ public class ExamUser {
     public String resultExam() {
         return "user/result-exam";
     }
+
+    @GetMapping("/user/history")
+    public String historyPage() {
+        return "attempt_history";
+    }
+
+    @GetMapping("/user/history/{attemptId}")
+    public String detailPage() {
+        return "attempt_detail";
+    }
+
+    @GetMapping("/user/profile")
+    public String profilePage() {
+        return "user/profile";
+    }
 }
