@@ -17,12 +17,12 @@ public class ExamUser {
 
     @GetMapping("/user/history")
     public String historyPage() {
-        return "attempt_history";
+        return "user/attempt_history";
     }
 
-    @GetMapping("/user/history/{attemptId}")
+    @GetMapping("/user/history/{id}")
     public String detailPage() {
-        return "attempt_detail";
+        return "user/attempt_detail";
     }
 
     @GetMapping("/user/profile")
