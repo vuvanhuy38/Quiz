@@ -215,7 +215,7 @@ document.getElementById("btnSaveCategory").onclick = async () => {
     }
 
     try {
-        const res = await fetch(`${API}/category`, {
+        const res = await fetch(`${API}/category/create`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, description, parentId })

@@ -27,10 +27,10 @@ public class QuestionValidator {
             }
             case TRUE_FALSE -> {
                 if (correctAnswer == null ||
-                    (!correctAnswer.equalsIgnoreCase("true") &&
-                     !correctAnswer.equalsIgnoreCase("false"))) {
+                    (!correctAnswer.equalsIgnoreCase("A") &&
+                     !correctAnswer.equalsIgnoreCase("B"))) {
 
-                    throw new RuntimeException("TRUE_FALSE phải là true/false");
+                    throw new RuntimeException("Chỉ 2 đáp án A và B");
                 }
             }
         }

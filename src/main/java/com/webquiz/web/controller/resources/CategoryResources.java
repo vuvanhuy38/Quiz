@@ -75,9 +75,9 @@ public class CategoryResources {
         );
     }
 
-    @GetMapping("/children/{parentId}")
-    public ResponseEntity<Response<List<CategoryResponse>>> getChildCategories(@PathVariable String parentId) {
-        List<CategoryResponse> data = categoryService.getChildCategories(parentId);
+    @GetMapping("/children/{id}")
+    public ResponseEntity<Response<List<CategoryResponse>>> getChildCategories(@PathVariable String id) {
+        List<CategoryResponse> data = categoryService.getChildCategories(id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 Response.<List<CategoryResponse>>builder()
                         .message("Lấy danh sách category con thành công")

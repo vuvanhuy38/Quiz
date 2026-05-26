@@ -44,8 +44,8 @@ function renderUI() {
     optionsBox.innerHTML = "";
 
     if (type === "TRUE_FALSE") {
-        addOptionRow("TRUE", "Đúng", true);
-        addOptionRow("FALSE", "Sai", true);
+        addOptionRow("A", "Đúng", true);
+        addOptionRow("B", "Sai", true);
     } else {
         // Mặc định 4 ô A, B, C, D
         ["A", "B", "C", "D"].forEach(key => addOptionRow(key, "", false));
