@@ -72,7 +72,7 @@ function renderExams(containerId, exams) {
                          ${exam.timeLimit} phút
                         </span>
                     </div>
-                    <p class="text-muted">${exam.description ?? "Không có mô tả"}</p>
+                    <p class="text-muted">${exam.description || "Không có mô tả"}</p>
                     <div class="mt-auto">
                         <div class="info-text mb-2">
                             Số câu hỏi: <strong>${exam.totalQuestions ?? 0}</strong>

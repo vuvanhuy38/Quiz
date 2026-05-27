@@ -21,6 +21,7 @@ public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
 
     User findByUsernameAndStatus(String username, StatusUserType status);
+    User findByUsername(String username);
 
     @Query("{ $and: [ " +
            " { $or: [ { $expr: { $eq: [?0, ''] } }, { 'first_name': { $regex: ?0, $options: 'i' } }, { 'last_name': { $regex: ?0, $options: 'i' } } ] }, " +

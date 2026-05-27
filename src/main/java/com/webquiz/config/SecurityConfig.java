@@ -1,5 +1,7 @@
 package com.webquiz.config;
 
+import com.webquiz.exception.CustomAuthFailureHandler;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +12,10 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
+
+    private final CustomAuthFailureHandler customAuthFailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
@@ -32,6 +37,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                     .loginPage("/login")
                     .loginProcessingUrl("/do-login")
+                    .failureHandler(customAuthFailureHandler)
                     .defaultSuccessUrl("/handle-login-success", true)
             )
             .logout(logout -> logout

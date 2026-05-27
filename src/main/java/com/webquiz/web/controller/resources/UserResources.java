@@ -24,9 +24,9 @@ public class UserResources {
 
     private final UserService userService;
 
-    @PutMapping("/block/{userId}")
-    public ResponseEntity<Response<Void>> blockUser(@PathVariable String userId) {
-        userService.blockUser(userId);
+    @PutMapping("/block/{id}")
+    public ResponseEntity<Response<Void>> blockUser(@PathVariable String id) {
+        userService.blockUser(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 Response.<Void>builder()
@@ -35,10 +35,10 @@ public class UserResources {
         );
     }
 
-    @PutMapping("/active/{userId}")
-    public ResponseEntity<Response<Void>> activeUser(@PathVariable String userId) {
+    @PutMapping("/active/{id}")
+    public ResponseEntity<Response<Void>> activeUser(@PathVariable String id) {
 
-        userService.activeUser(userId);
+        userService.activeUser(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 Response.<Void>builder()
@@ -47,9 +47,9 @@ public class UserResources {
         );
     }
 
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Response<Void>> delete(@PathVariable String userId) {
-        userService.delete(userId);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response<Void>> delete(@PathVariable String id) {
+        userService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 Response.<Void>builder()
                         .message("Xóa user thành công")

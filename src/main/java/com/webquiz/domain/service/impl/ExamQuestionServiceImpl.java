@@ -37,7 +37,6 @@ public class ExamQuestionServiceImpl implements ExamQuestionService {
 
             QuestionValidator.validate(item.getType(), item.getOptions(), item.getCorrectAnswer(),
                                        item.getCorrectAnswerKeys());
-            // ===== CREATE =====
             if (item.getId() == null) {
                 ExamQuestion newQuestion = ExamQuestion.builder()
                                                        .examId(examId)
@@ -52,7 +51,6 @@ public class ExamQuestionServiceImpl implements ExamQuestionService {
                 examQuestionRepository.save(newQuestion);
 
             } else {
-                // ===== UPDATE =====
                 ExamQuestion existing = examQuestionRepository.findById(item.getId())
                                                               .orElseThrow(() -> new RuntimeException("Question không tồn tại: " + item.getId()));
 

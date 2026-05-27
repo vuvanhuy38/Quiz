@@ -12,8 +12,8 @@
         <h4 class="text-center mb-3">Đăng nhập</h4>
 
         <!--  Lỗi login -->
-        <div th:if="${param.error}" class="alert alert-danger py-2">
-            Sai tài khoản hoặc mật khẩu
+        <div th:if="${param.error}" class="alert alert-danger">
+            <span th:text="${param.error}"></span>
         </div>
 
         <form th:action="@{/do-login}" method="post" autocomplete="off">

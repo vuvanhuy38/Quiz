@@ -12,26 +12,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const data = JSON.parse(raw);
 
-    document.getElementById("score").textContent =
-        data.score ?? 0;
+    document.getElementById("score").textContent = data.score ?? 0;
 
-    document.getElementById("scoreCircle").textContent =
-        data.score ?? 0;
+    document.getElementById("scoreCircle").textContent = data.score ?? 0;
 
-    document.getElementById("correctCount").textContent =
-        data.correctCount ?? 0;
+    document.getElementById("correctCount").textContent = data.correctCount ?? 0;
 
-    document.getElementById("totalQuestions").textContent =
-        data.totalQuestions ?? 0;
+    document.getElementById("totalQuestions").textContent = data.totalQuestions ?? 0;
 
-    document.getElementById("status").textContent =
-        data.status ?? "COMPLETED";
+    document.getElementById("status").textContent = data.status ?? "COMPLETED";
 
     if (data.finishedAt) {
-
         const date = new Date(data.finishedAt);
 
-        document.getElementById("finishedAt").textContent =
-            date.toLocaleString("vi-VN");
+        document.getElementById("finishedAt").textContent = date.toLocaleString("vi-VN");
     }
 });

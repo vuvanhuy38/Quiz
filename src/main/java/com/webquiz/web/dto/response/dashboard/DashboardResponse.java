@@ -16,11 +16,7 @@ public class DashboardResponse {
     private long totalQuestions;
 
     private List<RecentAttemptDto> recentAttempts;
-    private List<PopularExamDto> popularExams;
-    private List<RecentUserDto> recentUsers;
 
     private List<String> trendLabels;
     private List<Long> trendData;
-    private List<String> categoryLabels;
-    private List<Long> categoryData;
 }

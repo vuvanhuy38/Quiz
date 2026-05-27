@@ -89,11 +89,10 @@ public class ExamResources {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<ResponsePage<List<ExamItemResponse>>> getAllExams(
-            @RequestParam(required = false,defaultValue = "") String title,
-            @RequestParam(required = false) String categoryId,
-            @RequestParam(required = false) StatusExamType status,
-            Pageable pageable) {
+    public ResponseEntity<ResponsePage<List<ExamItemResponse>>> getAllExams(@RequestParam(required = false,defaultValue = "") String title,
+                                                                            @RequestParam(required = false) String categoryId,
+                                                                            @RequestParam(required = false) StatusExamType status,
+                                                                            Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 examService.getAllExams(pageable, title, categoryId, status)
         );

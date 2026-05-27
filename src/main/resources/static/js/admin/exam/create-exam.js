@@ -209,7 +209,7 @@ async function updateExam() {
         status: statusInput.value
     };
 
-    await fetch(`${API}/exams/${id}`, {
+    await fetch(`${API}/exams/update/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -683,3 +683,15 @@ function buildQuery(params) {
 
     return query.toString();
 }
+
+// ================= SHUFFLE QUESTIONS =================
+document.getElementById("btnShuffleQuestions").onclick = () => {
+    if (!questions.length) return;
+
+    for (let i = questions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
+
+    renderQuestions();
+};

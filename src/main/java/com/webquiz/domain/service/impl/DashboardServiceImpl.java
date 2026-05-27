@@ -26,108 +26,41 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     public DashboardResponse getStats() {
 
-        long totalUsers      = userRepository.count();
-        long totalExams      = examRepository.count();
-        long totalCategories = categoryRepository.count();
-        long totalAttempts   = examAttemptRepository.count();
-        long totalQuestions  = questionBankRepository.count();
-
         List<ExamAttempt> attempts = examAttemptRepository.findAll();
-        List<Exam>        exams    = examRepository.findAll();
-        List<User>        users    = userRepository.findAll();
-        List<Category>    categories = categoryRepository.findAll();
 
         return DashboardResponse.builder()
-                .totalUsers(totalUsers)
-                .totalExams(totalExams)
-                .totalCategories(totalCategories)
-                .totalAttempts(totalAttempts)
-                .totalQuestions(totalQuestions)
-                .recentAttempts(buildRecentAttempts(attempts))
-                .popularExams(buildPopularExams(exams))
-                .recentUsers(buildRecentUsers(users))
-                .trendLabels(buildTrendLabels())
-                .trendData(buildTrendData(attempts))
-                .categoryLabels(buildCategoryLabels(exams, categories))
-                .categoryData(buildCategoryData(exams, categories))
-                .build();
+                                .totalUsers(userRepository.count())
+                                .totalExams(examRepository.count())
+                                .totalCategories(categoryRepository.count())
+                                .totalAttempts((long) attempts.size())
+                                .totalQuestions(questionBankRepository.count())
+                                .recentAttempts(buildRecentAttempts(attempts))
+                                .trendLabels(buildTrendLabels())
+                                .trendData(buildTrendData(attempts))
+                                .build();
     }
-
-    // ─── Private helpers ─────────────────────────────────────────────────────
 
     private List<RecentAttemptDto> buildRecentAttempts(List<ExamAttempt> attempts) {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
 
         return attempts.stream()
-                .filter(a -> a != null)
-                .sorted(Comparator.comparing(
-                        a -> a.getCreatedAt() != null ? a.getCreatedAt() : LocalDateTime.MIN,
-                        Comparator.reverseOrder()))
-                .limit(5)
-                .map(a -> {
-                    String studentName = resolveStudentName(a.getUserId());
-                    String examTitle   = resolveExamTitle(a.getExamId());
-                    String time        = resolveTime(a.getCreatedAt(), a.getStartedAt(), fmt);
-
-                    return RecentAttemptDto.builder()
-                            .id(a.getId())
-                            .studentName(studentName)
-                            .examTitle(examTitle)
-                            .score(a.getScore() != null ? a.getScore() : 0.0)
-                            .status(a.getStatus() != null ? a.getStatus().name() : "COMPLETED")
-                            .time(time)
-                            .build();
-                })
-                .collect(Collectors.toList());
+                       .filter(a -> a != null)
+                       .sorted(Comparator.comparing(
+                               a -> a.getCreatedAt() != null ? a.getCreatedAt() : LocalDateTime.MIN,
+                               Comparator.reverseOrder()))
+                       .limit(5)
+                       .map(a -> RecentAttemptDto.builder()
+                                                 .id(a.getId())
+                                                 .studentName(resolveStudentName(a.getUserId()))
+                                                 .examTitle(resolveExamTitle(a.getExamId()))
+                                                 .score(a.getScore() != null ? a.getScore() : 0.0)
+                                                 .status(a.getStatus() != null ? a.getStatus().name() : "COMPLETED")
+                                                 .time(resolveTime(a.getCreatedAt(), a.getStartedAt(), fmt))
+                                                 .build())
+                       .collect(Collectors.toList());
     }
 
-    private List<PopularExamDto> buildPopularExams(List<Exam> exams) {
-
-        return exams.stream()
-                .filter(e -> e != null)
-                .sorted(Comparator.comparingLong(
-                        (Exam e) -> e.getAttemptCount() != null ? e.getAttemptCount() : 0L)
-                        .reversed())
-                .limit(5)
-                .map(e -> PopularExamDto.builder()
-                        .id(e.getId())
-                        .title(e.getTitle() != null ? e.getTitle() : "Không xác định")
-                        .totalQuestions(e.getTotalQuestions() != null ? e.getTotalQuestions() : 0)
-                        .attemptCount(e.getAttemptCount() != null ? e.getAttemptCount() : 0L)
-                        .status(e.getStatus() != null ? e.getStatus().name() : "ACTIVE")
-                        .build())
-                .collect(Collectors.toList());
-    }
-
-    private List<RecentUserDto> buildRecentUsers(List<User> users) {
-
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        return users.stream()
-                .filter(u -> u != null)
-                .sorted(Comparator.comparing(
-                        u -> u.getCreatedAt() != null ? u.getCreatedAt() : LocalDateTime.MIN,
-                        Comparator.reverseOrder()))
-                .limit(5)
-                .map(u -> {
-                    String fullName = buildFullName(u);
-                    String createdAt = u.getCreatedAt() != null
-                            ? u.getCreatedAt().format(fmt) : "";
-
-                    return RecentUserDto.builder()
-                            .id(u.getId())
-                            .username(u.getUsername() != null ? u.getUsername() : "")
-                            .fullName(fullName)
-                            .email(u.getEmail() != null ? u.getEmail() : "")
-                            .createdAt(createdAt)
-                            .status(u.getStatus() != null ? u.getStatus().name() : "ACTIVE")
-                            .build();
-                })
-                .collect(Collectors.toList());
-    }
-
-    // Trend chart: labels cho 7 ngày qua
     private List<String> buildTrendLabels() {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM");
@@ -139,7 +72,6 @@ public class DashboardServiceImpl implements DashboardService {
         return labels;
     }
 
-    // Trend chart: số lượt thi theo từng ngày trong 7 ngày qua
     private List<Long> buildTrendData(List<ExamAttempt> attempts) {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM");
@@ -164,54 +96,25 @@ public class DashboardServiceImpl implements DashboardService {
         return new ArrayList<>(map.values());
     }
 
-    // Doughnut chart: labels danh mục
-    private List<String> buildCategoryLabels(List<Exam> exams, List<Category> categories) {
-        return new ArrayList<>(buildCategoryMap(exams, categories).keySet());
-    }
-
-    // Doughnut chart: data số đề thi theo danh mục
-    private List<Long> buildCategoryData(List<Exam> exams, List<Category> categories) {
-        return new ArrayList<>(buildCategoryMap(exams, categories).values());
-    }
-
-    private Map<String, Long> buildCategoryMap(List<Exam> exams, List<Category> categories) {
-
-        Map<String, String> categoryNameMap = categories.stream()
-                .filter(c -> c != null && c.getId() != null)
-                .collect(Collectors.toMap(Category::getId, Category::getName, (v1, v2) -> v1));
-
-        Map<String, Long> result = new LinkedHashMap<>();
-        exams.stream()
-                .filter(e -> e != null)
-                .forEach(e -> {
-                    String catName = e.getCategoryId() != null
-                            ? categoryNameMap.getOrDefault(e.getCategoryId(), "Khác")
-                            : "Không danh mục";
-                    result.put(catName, result.getOrDefault(catName, 0L) + 1);
-                });
-
-        return result;
-    }
-
-    // ─── Utility methods ─────────────────────────────────────────────────────
+    // ─── Utility ─────────────────────────────────────────────────────────────
 
     private String resolveStudentName(String userId) {
         if (userId == null) return "Học viên ẩn danh";
         return userRepository.findById(userId)
-                .map(this::buildFullName)
-                .orElse("Học viên ẩn danh");
+                             .map(this::buildFullName)
+                             .orElse("Học viên ẩn danh");
     }
 
     private String resolveExamTitle(String examId) {
         if (examId == null) return "Không xác định";
         return examRepository.findById(examId)
-                .map(e -> e.getTitle() != null ? e.getTitle() : "Không xác định")
-                .orElse("Không xác định");
+                             .map(e -> e.getTitle() != null ? e.getTitle() : "Không xác định")
+                             .orElse("Không xác định");
     }
 
     private String resolveTime(LocalDateTime createdAt, LocalDateTime startedAt, DateTimeFormatter fmt) {
-        if (createdAt != null)  return createdAt.format(fmt);
-        if (startedAt != null)  return startedAt.format(fmt);
+        if (createdAt != null) return createdAt.format(fmt);
+        if (startedAt != null) return startedAt.format(fmt);
         return "";
     }
 

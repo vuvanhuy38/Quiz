@@ -1,5 +1,6 @@
 package com.webquiz.security;
 
+import com.webquiz.contact.enums.StatusUserType;
 import com.webquiz.domain.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +29,11 @@ public class CustomUserDetails implements UserDetails {
         return List.of(
                 new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
         );
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return user.getStatus() == StatusUserType.ACTIVE;
     }
 
     @Override
