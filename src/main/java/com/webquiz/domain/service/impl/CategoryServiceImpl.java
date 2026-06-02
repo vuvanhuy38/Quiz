@@ -36,14 +36,16 @@ public class CategoryServiceImpl implements CategoryService {
             Category parent = categoryRepository.findById(request.getParentId())
                                                 .orElseThrow(() -> new RuntimeException("Không tìm thấy danh mục cha"));
 
-            // không cho category con làm cha tiếp
             if (parent.getParentId() != null) {
                 throw new RuntimeException("Danh mục cha phải là danh mục gốc");
             }
         }
 
-        Category category = Category.builder().name(request.getName()).description(request.getDescription())
-                                    .parentId(request.getParentId()).build();
+        Category category = Category.builder()
+                                    .name(request.getName())
+                                    .description(request.getDescription())
+                                    .parentId(request.getParentId())
+                                    .build();
 
         categoryRepository.save(category);
     }
@@ -71,40 +73,39 @@ public class CategoryServiceImpl implements CategoryService {
 
         String normalizedName = Normalizer.normalize(name, Normalizer.Form.NFC);
 
-        Page<Category> parentCategories =
-                categoryRepository.findAllWithFilters(normalizedName, pageable);
+        Page<Category> parentCategories = categoryRepository.findAllWithFilters(normalizedName, pageable);
 
         List<CategoryResponse> content = parentCategories.map(parent -> {
 
             List<CategoryResponse> children = categoryRepository.findByParentId(parent.getId())
-                    .stream()
-                    .map(child -> CategoryResponse.builder()
-                            .id(child.getId())
-                            .name(child.getName())
-                            .description(child.getDescription())
-                            .parentId(child.getParentId())
-                            .children(List.of())
-                            .build())
-                    .toList();
+                                                                .stream()
+                                                                .map(child -> CategoryResponse.builder()
+                                                                                              .id(child.getId())
+                                                                                              .name(child.getName())
+                                                                                              .description(child.getDescription())
+                                                                                              .parentId(child.getParentId())
+                                                                                              .children(List.of())
+                                                                                              .build())
+                                                                .toList();
 
             return CategoryResponse.builder()
-                    .id(parent.getId())
-                    .name(parent.getName())
-                    .description(parent.getDescription())
-                    .parentId(parent.getParentId())
-                    .children(children)
-                    .build();
+                                   .id(parent.getId())
+                                   .name(parent.getName())
+                                   .description(parent.getDescription())
+                                   .parentId(parent.getParentId())
+                                   .children(children)
+                                   .build();
 
         }).getContent();
 
         return ResponsePage.<List<CategoryResponse>>builder()
-                .message("Lấy danh sách category thành công")
-                .data(content)
-                .totalElement(parentCategories.getTotalElements())
-                .totalPage(parentCategories.getTotalPages())
-                .pageSize(parentCategories.getSize())
-                .pageIndex(parentCategories.getNumber())
-                .build();
+                           .message("Lấy danh sách category thành công")
+                           .data(content)
+                           .totalElement(parentCategories.getTotalElements())
+                           .totalPage(parentCategories.getTotalPages())
+                           .pageSize(parentCategories.getSize())
+                           .pageIndex(parentCategories.getNumber())
+                           .build();
     }
 
     @Override
@@ -136,8 +137,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryResponse> getParentCategories() {
 
-        List<Category> categories =
-                categoryRepository.findByParentIdIsNull();
+        List<Category> categories = categoryRepository.findByParentIdIsNull();
 
         return categories.stream()
                          .map(this::mapToResponse)
@@ -148,8 +148,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryResponse> getChildCategories(String parentId) {
 
-        List<Category> categories =
-                categoryRepository.findByParentId(parentId);
+        List<Category> categories = categoryRepository.findByParentId(parentId);
 
         return categories.stream()
                          .map(this::mapToResponse)
@@ -168,15 +167,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse getById(String id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy danh mục"));
+                                              .orElseThrow(() -> new RuntimeException("Không tìm thấy danh mục"));
 
         return CategoryResponse.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .description(category.getDescription())
-                .parentId(category.getParentId())
-                .children(List.of())
-                .build();
+                               .id(category.getId())
+                               .name(category.getName())
+                               .description(category.getDescription())
+                               .parentId(category.getParentId())
+                               .children(List.of())
+                               .build();
     }
 
     private CategoryResponse mapToResponse(Category category) {
